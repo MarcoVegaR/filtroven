@@ -1,0 +1,92 @@
+import { Head, Link, router } from '@inertiajs/react';
+import { ArrowLeft, Pencil, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+
+{{ showPageActions }}
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
+import { useCan } from '@/hooks/use-can';
+import AppLayout from '@/layouts/app-layout';
+import type { BreadcrumbItem } from '@/types';
+import type { {{ model }}Data } from '@/types/{{ module }}-{{ resource }}';
+
+type Props = {
+    {{ modelVariable }}: {{ model }}Data;
+    breadcrumbs: BreadcrumbItem[];
+};
+
+export default function {{ model }}Show({ {{ modelVariable }}, breadcrumbs }: Props) {
+    const canUpdate = useCan('{{ permissionPrefix }}.update');
+    const canDelete = useCan('{{ permissionPrefix }}.delete');
+    const recordLabel = {{ recordDisplayTs }};
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const [processing, setProcessing] = useState(false);
+
+    function handleDelete() {
+        setProcessing(true);
+        router.delete(destroy.url({{ modelVariable }}), {
+            onFinish: () => {
+                setProcessing(false);
+                setShowDeleteDialog(false);
+            },
+        });
+    }
+
+    return (
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title={recordLabel} />
+
+            <div className="space-y-6 px-4 py-6 sm:px-6">
+                {/* Back link */}
+                <div>
+                    <Button asChild variant="ghost" size="sm" className="-ml-2 gap-1.5">
+                        <Link href={index.url()}>
+                            <ArrowLeft className="size-4" />
+                            Volver
+                        </Link>
+                    </Button>
+                </div>
+
+                {/* Header card */}
+                <Card className="gap-0 py-0">
+                    <div className="flex flex-col gap-6 p-6 sm:flex-row sm:items-start sm:justify-between">
+                        <div className="space-y-1">
+                            <h1 className="text-2xl font-semibold tracking-tight">
+                                {recordLabel}
+                            </h1>
+                            <p className="text-sm text-muted-foreground">
+                                Vista base del registro generado. Ajusta layout, copy y bloques del dominio cuando corresponda.
+                            </p>
+                        </div>
+
+                        <div className="flex shrink-0 flex-wrap items-center gap-2">
+{{ showPageEditAction }}
+                        </div>
+                    </div>
+                </Card>
+
+                {/* Fields card */}
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="text-sm font-semibold tracking-wide uppercase">Resumen</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+{{ show_fields }}
+                    </CardContent>
+                </Card>
+            </div>
+
+            <ConfirmationDialog
+                open={showDeleteDialog}
+                onOpenChange={setShowDeleteDialog}
+                title="¿Eliminar registro?"
+                description={`Esta acción es permanente. El registro "${recordLabel}" será eliminado del sistema.`}
+                confirmLabel="Eliminar permanentemente"
+                variant="destructive"
+                onConfirm={handleDelete}
+                loading={processing}
+            />
+        </AppLayout>
+    );
+}

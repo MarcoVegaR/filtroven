@@ -1,0 +1,49 @@
+name: docs
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/docs.yml
+      - docs/**
+      - mkdocs.yml
+      - requirements.txt
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/docs.yml
+      - docs/**
+      - mkdocs.yml
+      - requirements.txt
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-validation-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install documentation dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Build documentation
+        run: mkdocs build --strict
+
+      # Publishing is disabled until Filtroven has a confirmed documentation URL.

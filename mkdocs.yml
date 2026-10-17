@@ -1,0 +1,95 @@
+site_name: Filtroven
+site_description: Documentación técnica de Filtroven y referencia heredada de su base Laravel/Inertia
+repo_url: https://github.com/MarcoVegaR/filtroven
+repo_name: MarcoVegaR/filtroven
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/MarcoVegaR/filtroven
+      name: Repositorio en GitHub
+
+theme:
+  name: material
+  language: es
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: blue
+      toggle:
+        icon: material/weather-night
+        name: Cambiar a modo oscuro
+    - scheme: slate
+      primary: indigo
+      accent: blue
+      toggle:
+        icon: material/weather-sunny
+        name: Cambiar a modo claro
+  features:
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+
+plugins:
+  - search
+
+nav:
+  - Inicio: index.md
+  - Gobernanza:
+      - Política documental: governance/documentation-policy.md
+      - Inventario temporal Fase 2: governance/phase-2-document-inventory.md
+  - Primeros pasos: getting-started.md
+  - Arquitectura:
+      - Índice: architecture/index.md
+      - Autorización: authorization.md
+  - Desarrollo:
+      - Índice: development/index.md
+      - CRUD:
+          - Índice: development/crud/index.md
+          - Estándar: development/crud/standard.md
+          - Generador scaffold: development/crud/scaffold-generator.md
+          - Rutas, controller y FormRequest: development/crud/routing-controller-requests.md
+          - Frontend Inertia y Wayfinder: development/crud/frontend-inertia-wayfinder.md
+          - Autorización y pruebas: development/crud/authorization-testing.md
+          - Ciclo de vida: development/crud/lifecycle-operations.md
+      - Ruta histórica CRUD: crud-module-guide.md
+  - Operaciones:
+      - Índice: operations/index.md
+      - Servicios locales: operations/local-services.md
+      - Logging y correlación: operations/logging-correlation.md
+      - Auditoría: operations/auditing.md
+      - Colas y scheduler: operations/queues-scheduler.md
+      - Storage: operations/storage.md
+      - Excepciones operativas: operations/exceptions.md
+      - Ruta histórica de operabilidad: operability-guide.md
+  - Referencia:
+      - Índice: reference/index.md
+  - Reportes:
+      - Índice: reports/index.md
+      - Auditoría backend del Copilot: reports/copilot-backend-audit-2026-04-15.md
+      - Ruta histórica ADR-011: adr/ADR-011-copilot-backend-audit.md
+  - ADR:
+      - Índice: adr/index.md
+      - ADR-005 Límite de auditoría: adr/ADR-005-audit-boundary.md
+      - ADR-007 Logging y correlación: adr/ADR-007-logging-and-correlation.md
+      - ADR-008 Colas y scheduler: adr/ADR-008-queue-and-scheduler-policy.md
+      - ADR-009 Estándar de módulos CRUD: adr/ADR-009-crud-module-standard.md
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables

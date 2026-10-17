@@ -1,0 +1,32 @@
+import { Head } from '@inertiajs/react';
+
+{{ createPageActions }}
+import { HelpLink } from '@/components/help/help-link';
+import { PageHeader } from '@/components/system/page-header';
+import AppLayout from '@/layouts/app-layout';
+import type { BreadcrumbItem } from '@/types';
+import { {{ model }}Form } from './components/{{ modelKebab }}-form';
+
+type Props = {
+    breadcrumbs: BreadcrumbItem[];
+};
+
+export default function {{ model }}Create({ breadcrumbs }: Props) {
+    return (
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="Crear {{ resourceHeadline }}" />
+
+            <div className="space-y-6 px-4 py-6 sm:px-6">
+                <div className="mx-auto max-w-3xl space-y-6">
+                    <PageHeader
+                        title="Crear {{ resourceHeadline }}"
+                        description="Scaffold inicial listo para ajustar copy, reglas y experiencia del dominio."
+                        actions={<HelpLink category="{{ module }}" slug="{{ helpSlugCreate }}" />}
+                    />
+
+                    <{{ model }}Form action={store.form()} cancelHref={index.url()} />
+                </div>
+            </div>
+        </AppLayout>
+    );
+}

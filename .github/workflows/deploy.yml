@@ -1,0 +1,15 @@
+name: deploy-disabled
+
+# No automatic deployment until Filtroven has its own reviewed configuration.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  notice:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deployment is not configured
+        run: echo "Filtroven deployment is disabled. Configure a dedicated target and workflow before enabling it."

@@ -1,0 +1,103 @@
+version: 2
+
+updates:
+  - package-ecosystem: composer
+    directory: '/'
+    schedule:
+      interval: weekly
+      day: monday
+      time: '08:00'
+      timezone: America/Mexico_City
+    open-pull-requests-limit: 3
+    labels:
+      - dependencies
+      - php
+    commit-message:
+      prefix: build(deps)
+    groups:
+      laravel-core:
+        patterns:
+          - laravel/*
+      testing:
+        patterns:
+          - pestphp/*
+          - phpunit/*
+          - brianium/paratest
+      php-minor-patch:
+        update-types:
+          - minor
+          - patch
+    ignore:
+      - dependency-name: inertiajs/inertia-laravel
+        update-types:
+          - version-update:semver-major
+      - dependency-name: laravel/ai
+        update-types:
+          - version-update:semver-minor
+
+  - package-ecosystem: npm
+    directory: '/'
+    schedule:
+      interval: weekly
+      day: tuesday
+      time: '08:00'
+      timezone: America/Mexico_City
+    open-pull-requests-limit: 3
+    labels:
+      - dependencies
+      - javascript
+    commit-message:
+      prefix: build(deps)
+    groups:
+      frontend-safe:
+        patterns:
+          - '@inertiajs/*'
+          - '@tailwindcss/*'
+          - tailwindcss
+          - prettier
+          - prettier-plugin-tailwindcss
+          - lucide-react
+        update-types:
+          - minor
+          - patch
+      tooling-safe:
+        patterns:
+          - typescript
+          - typescript-eslint
+          - playwright
+        update-types:
+          - minor
+          - patch
+    ignore:
+      - dependency-name: '@inertiajs/react'
+        update-types:
+          - version-update:semver-major
+      - dependency-name: typescript
+        update-types:
+          - version-update:semver-major
+      - dependency-name: laravel-vite-plugin
+        update-types:
+          - version-update:semver-major
+      - dependency-name: lucide-react
+        update-types:
+          - version-update:semver-major
+      - dependency-name: vite
+        update-types:
+          - version-update:semver-major
+      - dependency-name: '@vitejs/plugin-react'
+        update-types:
+          - version-update:semver-major
+      - dependency-name: eslint
+        update-types:
+          - version-update:semver-major
+      - dependency-name: '@eslint/js'
+        update-types:
+          - version-update:semver-major
+      - dependency-name: '@types/node'
+        update-types:
+          - version-update:semver-major
+      - dependency-name: globals
+        update-types:
+          - version-update:semver-major
+      - dependency-name: '@rollup/rollup-linux-x64-gnu'
+      - dependency-name: '@rollup/rollup-win32-x64-msvc'

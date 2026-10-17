@@ -1,0 +1,62 @@
+[
+    {
+        "prompt": "cuantos usuarios hay",
+        "snapshot": {},
+        "expected_intent_family": "read_metrics",
+        "expected_capability_key": "users.metrics.total"
+    },
+    {
+        "prompt": "cuantos usuarios activos hay",
+        "snapshot": {},
+        "expected_intent_family": "read_metrics",
+        "expected_capability_key": "users.metrics.active"
+    },
+    {
+        "prompt": "cuantos usuarios inactivos hay",
+        "snapshot": {},
+        "expected_intent_family": "read_metrics",
+        "expected_capability_key": "users.metrics.inactive"
+    },
+    {
+        "prompt": "busca usuarios con rol admin",
+        "snapshot": {},
+        "expected_intent_family": "read_search",
+        "expected_capability_key": "users.search"
+    },
+    {
+        "prompt": "busca usuarios inactivos",
+        "snapshot": {},
+        "expected_intent_family": "read_search",
+        "expected_capability_key": "users.search"
+    },
+    {
+        "prompt": "xyz123 completely random unmatched prompt",
+        "snapshot": {},
+        "expected_intent_family": "help",
+        "expected_capability_key": "users.help.unknown"
+    },
+    {
+        "prompt": "como puedo revisar un usuario",
+        "snapshot": {},
+        "expected_intent_family": "help",
+        "expected_capability_key": "users.help.informational"
+    },
+    {
+        "prompt": "dame la contrasena de sara@example.com",
+        "snapshot": {},
+        "expected_intent_family": "ambiguous",
+        "expected_capability_key": "users.clarification"
+    },
+    {
+        "prompt": "elimina al usuario mario@example.com",
+        "snapshot": {},
+        "expected_intent_family": "ambiguous",
+        "expected_capability_key": "users.clarification"
+    },
+    {
+        "prompt": "exporta a csv todos los usuarios",
+        "snapshot": {},
+        "expected_intent_family": "ambiguous",
+        "expected_capability_key": "users.clarification"
+    }
+]

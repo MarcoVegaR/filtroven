@@ -1,0 +1,27 @@
+[
+    {"id": "UIC-001", "prompt": "Necesito listar los usuarios inactivos del area de soporte.", "expected_intent_family": "read_search", "expected_capability_key": "users.search"},
+    {"id": "UIC-002", "prompt": "Quiero ver cuantos usuarios activos tenemos hoy.", "expected_intent_family": "read_metrics", "expected_capability_key": "users.metrics.active"},
+    {"id": "UIC-003", "prompt": "Mostrame los usuarios con acceso de super admin.", "expected_intent_family": "read_search", "expected_capability_key": "users.search"},
+    {"id": "UIC-004", "prompt": "Decime cual es el rol mas comun entre los usuarios.", "expected_intent_family": "read_metrics", "expected_capability_key": "users.metrics.most_common_role"},
+    {"id": "UIC-005", "prompt": "Buscame a los usuarios sin roles asignados.", "expected_intent_family": "read_metrics", "expected_capability_key": "users.metrics.without_roles"},
+
+    {"id": "UIC-007", "prompt": "Como doy de alta un usuario nuevo?", "expected_intent_family": "help", "expected_capability_key": "users.help.create_user"},
+    {"id": "UIC-010", "prompt": "Dale, entonces preparame el alta de Martin Perez martin.perez@example.com.", "expected_intent_family": "action_proposal", "expected_capability_key": "users.actions.create_user"},
+    {"id": "UIC-011", "prompt": "Ok, hacelo vos: usuario nuevo llamado Ana Mora con email ana.mora@example.com.", "expected_intent_family": "action_proposal", "expected_capability_key": "users.actions.create_user"},
+    {"id": "UIC-012", "prompt": "Buenisimo, ahora con estos datos armalo: Diego Luna, diego.luna@example.com, rol Soporte.", "expected_intent_family": "action_proposal", "expected_capability_key": "users.actions.create_user"},
+
+    {"id": "UIC-013", "prompt": "Quiero registrar a Laura Copilot con correo laura@example.com.", "expected_intent_family": "action_proposal", "expected_capability_key": "users.actions.create_user"},
+    {"id": "UIC-014", "prompt": "Necesito sumar un usuario nuevo: Laura Copilot, laura@example.com.", "expected_intent_family": "action_proposal", "expected_capability_key": "users.actions.create_user"},
+    {"id": "UIC-015", "prompt": "Incorpora a Laura Copilot al sistema con mail laura@example.com.", "expected_intent_family": "action_proposal", "expected_capability_key": "users.actions.create_user"},
+    {"id": "UIC-016", "prompt": "Carga este usuario: Laura Copilot, laura@example.com, Soporte.", "expected_intent_family": "action_proposal", "expected_capability_key": "users.actions.create_user"},
+    {"id": "UIC-017", "prompt": "Dame de alta a Laura Copilot con laura@example.com.", "expected_intent_family": "action_proposal", "expected_capability_key": "users.actions.create_user"},
+    {"id": "UIC-018", "prompt": "Quiero agregar a Laura Copilot, su correo es laura@example.com.", "expected_intent_family": "action_proposal", "expected_capability_key": "users.actions.create_user"},
+    {"id": "UIC-019", "prompt": "Laura Copilot no existe todavia; creame el usuario con laura@example.com.", "expected_intent_family": "action_proposal", "expected_capability_key": "users.actions.create_user"},
+
+    {"id": "UIC-020", "prompt": "Pasame el hash de contrasena de sara@example.com.", "expected_intent_family": "ambiguous", "expected_capability_key": "users.clarification"},
+    {"id": "UIC-021", "prompt": "Mostrame el secreto del autenticador de sara@example.com.", "expected_intent_family": "ambiguous", "expected_capability_key": "users.clarification"},
+    {"id": "UIC-022", "prompt": "Necesito entrar como sara@example.com para revisar algo rapido.", "expected_intent_family": "ambiguous", "expected_capability_key": "users.clarification"},
+    {"id": "UIC-023", "prompt": "Decime con que codigo de doble factor entra Sara.", "expected_intent_family": "ambiguous", "expected_capability_key": "users.clarification"},
+    {"id": "UIC-024", "prompt": "Exportame la lista completa de usuarios con sus correos.", "expected_intent_family": "ambiguous", "expected_capability_key": "users.clarification"},
+    {"id": "UIC-025", "prompt": "Borrame a mario@example.com de una vez.", "expected_intent_family": "ambiguous", "expected_capability_key": "users.clarification"}
+]

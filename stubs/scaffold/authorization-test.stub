@@ -1,0 +1,21 @@
+<?php
+
+use App\Models\{{ model }};
+use App\Models\User;
+use Database\Seeders\RolesAndPermissionsSeeder;
+use Database\Seeders\{{ moduleStudly }}{{ resourceStudly }}PermissionsSeeder;
+
+beforeEach(function () {
+    $this->seed(RolesAndPermissionsSeeder::class);
+    $this->seed({{ moduleStudly }}{{ resourceStudly }}PermissionsSeeder::class);
+});
+
+it('requires authentication for index', function () {
+    $this->get(route('{{ routeNamePrefix }}.index'))
+        ->assertRedirect(route('login'));
+});
+
+it('keeps authorization layered in generated requests and policy', function () {
+    expect(file_get_contents(app_path('Http/Requests/{{ moduleStudly }}/{{ resourceStudly }}/Store{{ model }}Request.php')) ?: '')
+        ->toContain("Gate::allows('create', {{ model }}::class)");
+});

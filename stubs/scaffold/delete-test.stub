@@ -1,0 +1,22 @@
+<?php
+
+use App\Models\{{ model }};
+use App\Models\User;
+use Database\Seeders\RolesAndPermissionsSeeder;
+use Database\Seeders\{{ moduleStudly }}{{ resourceStudly }}PermissionsSeeder;
+
+beforeEach(function () {
+    $this->seed(RolesAndPermissionsSeeder::class);
+    $this->seed({{ moduleStudly }}{{ resourceStudly }}PermissionsSeeder::class);
+});
+
+it('deletes a {{ resourceHeadline }} record when writable', function () {
+    $user = User::factory()->withSuperAdmin()->withTwoFactor()->create();
+    $record = {{ model }}::factory()->create();
+
+    $response = $this->actingAs($user)->delete(route('{{ routeNamePrefix }}.destroy', $record));
+
+    if (method_exists($response, 'assertRedirect')) {
+        $response->assertRedirect();
+    }
+});

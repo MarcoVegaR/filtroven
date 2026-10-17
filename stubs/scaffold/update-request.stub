@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Http\Requests\{{ moduleStudly }}\{{ resourceStudly }};
+
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
+{{ requestRuleImports }}
+
+class Update{{ model }}Request extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return Gate::allows('update', $this->route('{{ routeParameter }}'));
+    }
+
+    /** @return array<string, ValidationRule|array<mixed>|string> */
+    public function rules(): array
+    {
+        // TODO: Required fields stay required on update in the frozen PRD-07 baseline; relax to partial-update semantics only when your module explicitly needs it.
+        return [
+{{ requestRulesUpdate }}
+        ];
+    }
+}

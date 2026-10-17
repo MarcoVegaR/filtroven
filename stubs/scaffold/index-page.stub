@@ -1,0 +1,163 @@
+import { Head, Link, router } from '@inertiajs/react';
+import {
+    ArrowDown,
+    ArrowUp,
+    ArrowUpDown,
+    Eye,
+    MoreHorizontal,
+    Pencil,
+    PlusCircle,
+    Search,
+    Trash2,
+} from 'lucide-react';
+import { useState } from 'react';
+
+{{ indexPageActions }}
+import { PageHeader } from '@/components/system/page-header';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { EmptyState } from '@/components/ui/empty-state';
+import { Input } from '@/components/ui/input';
+import { LaravelPagination } from '@/components/ui/pagination';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { useCan } from '@/hooks/use-can';
+import { HelpLink } from '@/components/help/help-link';
+import AppLayout from '@/layouts/app-layout';
+import type { BreadcrumbItem, PaginatedData } from '@/types';
+import type { {{ model }}Data } from '@/types/{{ module }}-{{ resource }}';
+
+type Props = {
+    {{ resourceVariable }}: PaginatedData<{{ model }}Data>;
+    filters: { search?: string; sort?: string; direction?: string };
+    breadcrumbs: BreadcrumbItem[];
+};
+
+export default function {{ resourceStudly }}Index({ {{ resourceVariable }}, filters, breadcrumbs }: Props) {
+    const canCreate = useCan('{{ permissionPrefix }}.create');
+    const canUpdate = useCan('{{ permissionPrefix }}.update');
+    const canDelete = useCan('{{ permissionPrefix }}.delete');
+    const [search, setSearch] = useState(filters.search ?? '');
+    const [processing, setProcessing] = useState(false);
+    const [target, setTarget] = useState<{{ model }}Data | null>(null);
+
+    function renderSortIcon(
+        activeSort: string | undefined,
+        direction: string | undefined,
+        column: string,
+    ): React.ReactNode {
+        if (activeSort !== column) {
+            return <ArrowUpDown className="size-3.5 text-muted-foreground/60" />;
+        }
+
+        return direction === 'desc' ? (
+            <ArrowDown className="size-3.5" />
+        ) : (
+            <ArrowUp className="size-3.5" />
+        );
+    }
+
+    function submitSearch(event: React.FormEvent) {
+        event.preventDefault();
+        router.get(
+            index.url(),
+            {
+                search: search || undefined,
+                sort: filters.sort,
+                direction: filters.direction,
+            },
+            { preserveState: true, replace: true },
+        );
+    }
+
+    function handleSort(column: string) {
+        const isCurrentSort = filters.sort === column;
+        const direction = isCurrentSort && filters.direction === 'asc' ? 'desc' : 'asc';
+
+        router.get(
+            index.url(),
+            {
+                search: search || undefined,
+                sort: column,
+                direction,
+            },
+            { preserveState: true, replace: true },
+        );
+    }
+
+{{ indexDeleteHandler }}
+
+    return (
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="{{ resourcesHeadline }}" />
+
+            <div className="space-y-6 px-4 py-6 sm:px-6">
+                <PageHeader
+                    title="{{ resourcesHeadline }}"
+                    description="Scaffold base listo para refinamiento del módulo."
+                    actions={
+                        <>
+                            <HelpLink category="{{ module }}" slug="{{ helpSlugIndex }}" />
+                            {{{ indexCreateAction }}}
+                        </>
+                    }
+                />
+
+                <Card className="gap-0 py-0">
+                    <div className="p-4">
+                        <form onSubmit={submitSearch} className="relative max-w-sm">
+                            <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+                            <Input
+                                type="search"
+                                value={search}
+                                onChange={(event) => setSearch(event.target.value)}
+                                placeholder="Buscar…"
+                                className="pl-9"
+                            />
+                        </form>
+                    </div>
+                </Card>
+
+                { {{ resourceVariable }}.data.length === 0 ? (
+                    <Card className="py-0">
+                        <EmptyState
+                            title="Sin registros"
+                            description="Aún no hay datos para este módulo."
+                            action={{{ indexEmptyStateAction }}}
+                        />
+                    </Card>
+                ) : (
+                    <>
+                        <Card className="gap-0 overflow-hidden py-0">
+                            <Table>
+                                <TableHeader>
+                                    <TableRow className="bg-muted/40 hover:bg-muted/40">
+{{ indexHeaders }}
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    { {{ resourceVariable }}.data.map((row) => (
+                                        <TableRow key={row.id} className="group transition-colors">
+{{ indexCells }}
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </Card>
+
+                        <LaravelPagination links={ {{ resourceVariable }}.links } from={ {{ resourceVariable }}.from } to={ {{ resourceVariable }}.to } total={ {{ resourceVariable }}.total } />
+                    </>
+                )}
+            </div>
+
+{{ indexDeleteDialog }}
+        </AppLayout>
+    );
+}

@@ -1,0 +1,10 @@
+import type { PaginatedData } from '@/types/ui';
+
+export type {{ model }}Data = {
+    id: number;
+{{ typeFields }}
+    created_at: string;
+    updated_at: string;
+};
+
+export type Paginated{{ resourceStudly }} = PaginatedData<{{ model }}Data>;

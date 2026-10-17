@@ -1,0 +1,11 @@
+<?php
+
+use App\Http\Controllers\{{ moduleStudly }}\{{ model }}Controller;
+use Illuminate\Support\Facades\Route;
+
+Route::middleware(['auth', 'verified', 'ensure-two-factor'])
+    ->prefix('{{ module }}')
+    ->name('{{ module }}.')
+    ->group(function (): void {
+{{ resource_routes }}
+    });

@@ -1,0 +1,25 @@
+---
+title: Gestionar {{ resourcesHeadline }}
+summary: Flujo inicial para consultar y operar {{ resourcesHeadline }} dentro del módulo {{ moduleHeadline }}.
+category: {{ moduleHeadline }}
+order: 10
+---
+
+Describe aquí el propósito operativo de **{{ resourcesHeadline }}** y cuándo conviene consultar este artículo.
+
+## Checklist rápido
+
+- Ubica la vista principal de {{ resourcesHeadline }} en el shell autenticado.
+- Revisa los permisos necesarios antes de ejecutar cambios.
+- Documenta aquí validaciones, filtros o decisiones clave del flujo.
+
+## Pasos sugeridos
+
+1. Entra al módulo **{{ moduleHeadline }}**.
+2. Abre la sección **{{ resourcesHeadline }}**.
+3. Completa el flujo principal y actualiza esta guía con las reglas reales del negocio.
+
+## Notas operativas
+
+- Sustituye este contenido por instrucciones específicas del equipo.
+- Añade enlaces a artículos relacionados cuando el módulo crezca.

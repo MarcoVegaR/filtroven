@@ -1,0 +1,29 @@
+<?php
+
+use App\Models\{{ model }};
+use App\Models\Role;
+use App\Models\User;
+use Database\Seeders\RolesAndPermissionsSeeder;
+use Database\Seeders\{{ moduleStudly }}{{ resourceStudly }}PermissionsSeeder;
+
+beforeEach(function () {
+    $this->seed(RolesAndPermissionsSeeder::class);
+    $this->seed({{ moduleStudly }}{{ resourceStudly }}PermissionsSeeder::class);
+});
+
+it('forbids index without view permission', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->get(route('{{ routeNamePrefix }}.index'))
+        ->assertForbidden();
+});
+
+it('shows the index for authorized users', function () {
+    $user = User::factory()->withSuperAdmin()->withTwoFactor()->create();
+    {{ model }}::factory()->count(2)->create();
+
+    $this->actingAs($user)
+        ->get(route('{{ routeNamePrefix }}.index'))
+        ->assertOk();
+});

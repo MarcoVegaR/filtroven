@@ -1,0 +1,107 @@
+<?php
+
+namespace App\Http\Controllers\{{ moduleStudly }};
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\{{ moduleStudly }}\{{ resourceStudly }}\Store{{ model }}Request;
+use App\Http\Requests\{{ moduleStudly }}\{{ resourceStudly }}\Update{{ model }}Request;
+use App\Models\{{ model }};
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use Inertia\Inertia;
+use Inertia\Response;
+
+class {{ model }}Controller extends Controller
+{
+    public function index(Request $request): Response
+    {
+        Gate::authorize('viewAny', {{ model }}::class);
+
+        $allowedSorts = {{ sortableColumns }};
+        $sort = in_array((string) $request->input('sort'), $allowedSorts, true)
+            ? (string) $request->input('sort')
+            : '{{ defaultSortColumn }}';
+        $direction = $request->input('direction') === 'asc' ? 'asc' : '{{ defaultSortDirection }}';
+
+        $rows = {{ model }}::query()
+{{ controllerIndexSearch }}
+            ->orderBy($sort, $direction)
+            ->paginate({{ perPage }})
+            ->withQueryString();
+
+        return Inertia::render('{{ pagePath }}/index', [
+            '{{ resource }}' => $rows,
+            'filters' => $request->only(['search', 'sort', 'direction']),
+{{ inertiaProps }}
+        ]);
+    }
+
+    public function create(): Response
+    {
+        Gate::authorize('create', {{ model }}::class);
+
+        return Inertia::render('{{ pagePath }}/create', [
+            'breadcrumbs' => [
+                ['title' => '{{ resourcesHeadline }}', 'href' => route('{{ routeNamePrefix }}.index', absolute: false)],
+                ['title' => 'Crear'],
+            ],
+        ]);
+    }
+
+    public function store(Store{{ model }}Request $request): RedirectResponse
+    {
+        $record = {{ model }}::create([
+{{ controllerStorePayload }}
+        ]);
+
+        return to_route('{{ routeNamePrefix }}.show', $record)
+            ->with('success', __('{{ resourceHeadline }} creado exitosamente.'));
+    }
+
+    public function show({{ model }} ${{ modelVariable }}): Response
+    {
+        Gate::authorize('view', ${{ modelVariable }});
+
+        return Inertia::render('{{ pagePath }}/show', [
+            '{{ modelVariable }}' => ${{ modelVariable }},
+            'breadcrumbs' => [
+                ['title' => '{{ resourcesHeadline }}', 'href' => route('{{ routeNamePrefix }}.index', absolute: false)],
+                ['title' => {{ recordDisplayPhp }}],
+            ],
+        ]);
+    }
+
+    public function edit({{ model }} ${{ modelVariable }}): Response
+    {
+        Gate::authorize('update', ${{ modelVariable }});
+
+        return Inertia::render('{{ pagePath }}/edit', [
+            '{{ modelVariable }}' => ${{ modelVariable }},
+            'breadcrumbs' => [
+                ['title' => '{{ resourcesHeadline }}', 'href' => route('{{ routeNamePrefix }}.index', absolute: false)],
+                ['title' => {{ recordDisplayPhp }}],
+            ],
+        ]);
+    }
+
+    public function update(Update{{ model }}Request $request, {{ model }} ${{ modelVariable }}): RedirectResponse
+    {
+        ${{ modelVariable }}->update([
+{{ controllerUpdatePayload }}
+        ]);
+
+        return to_route('{{ routeNamePrefix }}.show', ${{ modelVariable }})
+            ->with('success', __('{{ resourceHeadline }} actualizado exitosamente.'));
+    }
+
+    public function destroy(Request $request, {{ model }} ${{ modelVariable }}): RedirectResponse
+    {
+        Gate::authorize('delete', ${{ modelVariable }});
+
+        ${{ modelVariable }}->delete();
+
+        return to_route('{{ routeNamePrefix }}.index')
+            ->with('success', __('{{ resourceHeadline }} eliminado exitosamente.'));
+    }
+}

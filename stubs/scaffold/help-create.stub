@@ -1,0 +1,28 @@
+---
+title: Crear {{ resourceHeadline }}
+summary: Flujo para dar de alta un nuevo {{ resourceHeadline }} en el sistema.
+category: {{ moduleHeadline }}
+order: 20
+---
+
+## Descripción del flujo
+
+Esta guía cubre el proceso de creación de un nuevo {{ resourceHeadline }}.
+
+## Pasos sugeridos
+
+1. Accede al módulo **{{ moduleHeadline }}**.
+2. Haz clic en "Crear {{ resourceHeadline }}".
+3. Completa los campos obligatorios.
+4. Revisa las validaciones.
+5. Guarda el registro.
+
+## Campos principales
+
+- Describe aquí los campos relevantes del formulario
+- Incluye reglas de validación importantes
+- Documenta valores por defecto si aplica
+
+## Notas operativas
+
+> Reemplaza este contenido con campos reales y reglas del negocio para {{ resourceHeadline }}.

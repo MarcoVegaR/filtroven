@@ -1,0 +1,34 @@
+import { Head } from '@inertiajs/react';
+
+{{ editPageActions }}
+import { PageHeader } from '@/components/system/page-header';
+import AppLayout from '@/layouts/app-layout';
+import type { BreadcrumbItem } from '@/types';
+import type { {{ model }}Data } from '@/types/{{ module }}-{{ resource }}';
+import { {{ model }}Form } from './components/{{ modelKebab }}-form';
+
+type Props = {
+    {{ modelVariable }}: {{ model }}Data;
+    breadcrumbs: BreadcrumbItem[];
+};
+
+export default function {{ model }}Edit({ {{ modelVariable }}, breadcrumbs }: Props) {
+    const recordLabel = {{ recordDisplayTs }};
+
+    return (
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title={`Editar {{ resourceHeadline }}: ${recordLabel}`} />
+
+            <div className="space-y-6 px-4 py-6 sm:px-6">
+                <div className="mx-auto max-w-3xl space-y-6">
+                    <PageHeader
+                        title={`Editar {{ resourceHeadline }}: ${recordLabel}`}
+                        description="Revisa validaciones, copy y comportamiento del módulo antes de cerrar la integración."
+                    />
+
+                    <{{ model }}Form action={update.form({{ modelVariable }})} cancelHref={index.url()} defaultValues={ {{ modelVariable }} } />
+                </div>
+            </div>
+        </AppLayout>
+    );
+}

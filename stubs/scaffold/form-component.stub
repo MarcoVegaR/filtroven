@@ -1,0 +1,51 @@
+import { Form, router } from '@inertiajs/react';
+import type { Wayfinder } from '@laravel/wayfinder';
+
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import type { {{ model }}Data } from '@/types/{{ module }}-{{ resource }}';
+
+type Props = {
+    action: Wayfinder;
+    cancelHref: string;
+    defaultValues?: Partial<{{ model }}Data>;
+};
+
+export function {{ model }}Form({ action, cancelHref, defaultValues }: Props) {
+    return (
+        <Form {...action} className="space-y-6">
+            {({ errors, processing }) => (
+                <>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Datos base</CardTitle>
+                            <CardDescription>
+                                Completa el baseline generado y ajusta copy,
+                                validaciones y reglas del dominio antes de
+                                entregar el módulo.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+{{ formFields }}
+                        </CardContent>
+                    </Card>
+
+                    <div className="flex items-center gap-3">
+                        <Button type="submit" disabled={processing}>{processing ? 'Guardando…' : 'Guardar'}</Button>
+                        <Button type="button" variant="outline" onClick={() => router.visit(cancelHref)} disabled={processing}>Cancelar</Button>
+                    </div>
+                </>
+            )}
+        </Form>
+    );
+}

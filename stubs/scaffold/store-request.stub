@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Http\Requests\{{ moduleStudly }}\{{ resourceStudly }};
+
+use App\Models\{{ model }};
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
+{{ requestRuleImports }}
+
+class Store{{ model }}Request extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return Gate::allows('create', {{ model }}::class);
+    }
+
+    /** @return array<string, ValidationRule|array<mixed>|string> */
+    public function rules(): array
+    {
+        return [
+{{ requestRulesStore }}
+        ];
+    }
+}

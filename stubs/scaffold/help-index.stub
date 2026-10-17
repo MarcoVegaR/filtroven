@@ -1,0 +1,26 @@
+---
+title: Gestionar {{ resourcesHeadline }}
+summary: Consulta, filtra y gestiona {{ resourcesHeadline }} en el sistema.
+category: {{ moduleHeadline }}
+order: 10
+---
+
+## Descripción general
+
+Esta sección permite administrar {{ resourcesHeadline }} de forma centralizada.
+
+## Checklist rápido
+
+- [ ] Ubicar la vista principal de {{ resourcesHeadline }}
+- [ ] Verificar permisos necesarios para operar
+- [ ] Identificar filtros y búsquedas disponibles
+
+## Acciones principales
+
+- **Crear**: Accede a la vista de creación para agregar nuevos registros
+- **Editar**: Modifica registros existentes (requiere permisos)
+- **Eliminar/Desactivar**: Operaciones destructivas con confirmación
+
+## Notas operativas
+
+> Reemplaza este contenido con reglas específicas del dominio de {{ moduleHeadline }}.
