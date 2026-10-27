@@ -63,19 +63,23 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
                                     variant="ghost"
                                     size="icon"
                                     className="mr-2 h-[34px] w-[34px]"
+                                    aria-label="Abrir menú de navegación"
                                 >
                                     <Menu className="h-5 w-5" />
                                 </Button>
                             </SheetTrigger>
                             <SheetContent
                                 side="left"
-                                className="flex h-full w-64 flex-col items-stretch justify-between bg-sidebar"
+                                className="flex h-full w-64 flex-col items-stretch justify-between bg-sidebar text-sidebar-foreground"
                             >
                                 <SheetTitle className="sr-only">
                                     Menú de navegación
                                 </SheetTitle>
                                 <SheetHeader className="flex justify-start text-left">
-                                    <AppLogoIcon className="h-6 w-6 fill-current text-black dark:text-white" />
+                                    <AppLogoIcon
+                                        className="size-10"
+                                        alt="Filtroven"
+                                    />
                                 </SheetHeader>
                                 <div className="flex h-full flex-1 flex-col space-y-4 p-4">
                                     <div className="flex h-full flex-col justify-between text-sm">

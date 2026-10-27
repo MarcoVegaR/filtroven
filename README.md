@@ -11,6 +11,8 @@ Aplicación Laravel 13 con Inertia v2, React 19, TypeScript, Tailwind CSS v4 y V
 
 > **Contexto histórico:** los `PRD*.md`, ADRs, reportes y guías importados documentan el proyecto de origen. Sus estados de aceptación o vigencia no los convierten en requisitos ni decisiones ratificadas de Filtroven. Este README es el punto de entrada actual; las funciones de negocio requieren alcance explícito.
 
+**Adaptador propio de Filtroven:** [PRD-15](PRD-15.md) conserva la especificación documental en raíz; la [guía técnica del adaptador WIX](docs/architecture/wix-adapter.md) describe la implementación actual, API, arquitectura, contrato, requisitos, pruebas y compatibilidad con Laravel Cloud. El switch está habilitado (`config/wix.php`), sin consultas al arrancar: los parámetros técnicos aún sin configurar hacen fallar cerrado cualquier intento. Esto no acredita preparación productiva ni compatibilidad Cloud real.
+
 ## Requisitos
 
 - PHP 8.4 o superior (entorno de importación: PHP 8.5) y Composer 2. Comprueba las extensiones requeridas con `composer check-platform-reqs`; para el entorno local se necesitan `pdo_pgsql` y `redis`, y para las pruebas aisladas `pdo_sqlite`.
@@ -34,14 +36,14 @@ php artisan key:generate --no-interaction
 
 Revisa `.env` antes de conectar servicios. Los valores de desarrollo son ejemplos, no credenciales de producción:
 
-| Servicio | Configuración de ejemplo |
-| --- | --- |
-| Aplicación | `APP_NAME=Filtroven`; `APP_URL=http://localhost:8000` |
-| PostgreSQL | `127.0.0.1:5432`, base `filtroven`; ajustar usuario y contraseña locales |
-| Redis | `127.0.0.1:6379`, DB 0 y caché DB 1 |
+| Servicio    | Configuración de ejemplo                                                                                                  |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Aplicación  | `APP_NAME=Filtroven`; `APP_URL=http://localhost:8000`                                                                     |
+| PostgreSQL  | `127.0.0.1:5432`, base `filtroven`; ajustar usuario y contraseña locales                                                  |
+| Redis       | `127.0.0.1:6379`, DB 0 y caché DB 1                                                                                       |
 | Aislamiento | `REDIS_PREFIX=filtroven-local-database-`, `CACHE_PREFIX=filtroven-local-cache-`, `SESSION_COOKIE=filtroven-local-session` |
-| Correo | Mailpit SMTP en `127.0.0.1:1025`; remitente de prueba `hello@filtroven.test` |
-| Archivos | MinIO en `127.0.0.1:9000`, bucket `filtroven-local`; ajustar credenciales al servicio existente |
+| Correo      | Mailpit SMTP en `127.0.0.1:1025`; remitente de prueba `hello@filtroven.test`                                              |
+| Archivos    | MinIO en `127.0.0.1:9000`, bucket `filtroven-local`; ajustar credenciales al servicio existente                           |
 
 El remitente `.test` no es un dominio público de Filtroven. Usa prefijos distintos para cada aplicación/entorno que comparta Redis; no ejecutes `FLUSHDB` en instancias compartidas. `.env` está excluido de Git; nunca publiques claves o credenciales reales.
 

@@ -14,12 +14,16 @@ use App\Observers\TwoFactorAuditObserver;
 use App\Policies\PermissionPolicy;
 use App\Policies\RolePolicy;
 use App\Policies\UserPolicy;
+use App\Services\Wix\WixLookupService;
+use App\Support\Wix\Contracts\WixLookup;
+use App\Support\Wix\LookupTelemetry;
 use Carbon\CarbonImmutable;
 use Illuminate\Auth\Events\Failed;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Log\Context\Repository;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
@@ -29,6 +33,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
 use Laravel\Ai\Events\AgentPrompted;
+use Psr\Log\LoggerInterface;
 use Spatie\Permission\Events\RoleAttachedEvent;
 use Spatie\Permission\Events\RoleDetachedEvent;
 use Spatie\Permission\Models\Permission;
@@ -40,7 +45,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(WixLookup::class, fn ($app): WixLookupService => $app->make(WixLookupService::class));
+        $this->app->bind(WixLookupService::class, fn ($app): WixLookupService => new WixLookupService(
+            fn (): array => $app['config']->get('wix', []),
+            telemetry: new LookupTelemetry($app->make(LoggerInterface::class), $app->make(Repository::class)),
+        ));
     }
 
     /**

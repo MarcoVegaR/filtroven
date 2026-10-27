@@ -43,9 +43,11 @@ export default function AppearanceToggleTab({
             {tabs.map(({ value, icon: Icon, label }) => (
                 <button
                     key={value}
+                    type="button"
+                    aria-pressed={appearance === value}
                     onClick={() => updateAppearance(value)}
                     className={cn(
-                        'flex items-center rounded-md px-3.5 py-1.5 transition-colors',
+                        'flex items-center rounded-md px-3.5 py-1.5 transition-colors outline-none focus-visible:ring-3 focus-visible:ring-ring',
                         appearance === value
                             ? 'bg-background text-foreground shadow-xs'
                             : 'text-muted-foreground hover:bg-primary/10 hover:text-foreground',

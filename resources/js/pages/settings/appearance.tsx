@@ -35,7 +35,7 @@ export default function Appearance() {
                         <CardTitle>Apariencia</CardTitle>
                         <CardDescription>
                             Elige cómo deseas ver la interfaz corporativa con la
-                            paleta violeta predeterminada.
+                            paleta Graphite de Filtroven.
                         </CardDescription>
                     </CardHeader>
                     <CardContent>

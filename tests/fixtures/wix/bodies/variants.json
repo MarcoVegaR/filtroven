@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "revision": "2026-10-19.2",
+  "scope": "Offline adversarial inputs, not captures or proof of parser, transport or CA acceptance",
+  "parents": {
+    "co-p1": {"fixture_id": "es-co-51515-search-p1-s1", "sha256": "a9130eec7d72ed57e4db6dd00f4e1f2c71337536ff30d8c8a92fded7984905c8"},
+    "co-p2": {"fixture_id": "es-co-51515-search-p2-s1", "sha256": "63a257e433bd0a73763872d007f104421da60f3ee5d7ccb22e1321e1b3bc97e1"},
+    "co-p3": {"fixture_id": "es-co-51515-search-p3-s1", "sha256": "d3a96c3f3f0a133b4a7a13a3551280c79776e378d650a5325e702c01014b48e2"},
+    "co-detail": {"fixture_id": "es-co-51515-detail", "sha256": "53a5192e43a0caa78dbe6ff0569b4cacc9848bf9f742f604047ca3bcaeb08866"},
+    "ap-detail": {"fixture_id": "en-ap-51515R-detail", "sha256": "e476980c56fd6ec5fd9bf87b46c76c77d59fe8dddd8d6512c4f02b09fee73615"},
+    "ap-assets": {"fixture_id": "en-ap-51515R_WIX-assets-l2-o0", "sha256": "9b8f335788421f8f562e65ae73d9ef4a62dd22b024b933baf79633f8e3b9a1b8"}
+  },
+  "cases": {
+    "late-exact": {"nature": "derived", "purpose": "Move the exact designation to page three; preserve three coherent pages", "steps": [
+      {"parent": "co-p1", "replace": [{"from": "51515", "to": "SYNTHETIC-NONEXACT"}]},
+      {"parent": "co-p2"},
+      {"parent": "co-p3", "replace": [{"from": "51515XP", "to": "51515"}]}
+    ]},
+    "repeated-reference": {"nature": "derived", "purpose": "Same proven product reference occurs twice with separate page occurrences", "steps": [
+      {"parent": "co-p1"},
+      {"parent": "co-p1", "set": [{"path": ["data", "catalogSearch", "pageInfo", "currentPage"], "value": 2}]},
+      {"parent": "co-p3"}
+    ]},
+    "two-exact-identities": {"nature": "derived", "purpose": "Second exact designation has distinct published SKU and URL key; not a conflicting shared identity", "steps": [
+      {"parent": "co-p1"},
+      {"parent": "co-p2", "replace": [{"from": "51515MP", "to": "51515"}], "set": [
+        {"path": ["data", "catalogSearch", "items", 0, "product", "sku"], "value": "SYNTHETIC-DISTINCT-WIX"},
+        {"path": ["data", "catalogSearch", "items", 0, "product", "urlKey"], "value": "synthetic-distinct-wix"}
+      ]}
+    ]},
+    "conflicting-reference": {"nature": "derived", "purpose": "Same SKU with contradictory detail link cannot prove deduplication or two valid identities", "steps": [
+      {"parent": "co-p1"},
+      {"parent": "co-p1", "set": [
+        {"path": ["data", "catalogSearch", "pageInfo", "currentPage"], "value": 2},
+        {"path": ["data", "catalogSearch", "items", 0, "product", "urlKey"], "value": "synthetic-conflict"}
+      ]}
+    ]},
+    "missing-identifier": {"nature": "derived", "purpose": "Missing URL key prevents linking candidate to detail", "steps": [
+      {"parent": "co-p1", "remove": [["data", "catalogSearch", "items", 0, "product", "urlKey"]]}
+    ]},
+    "late-mismatch": {"nature": "derived", "purpose": "After search and detail evidence, later same-meaning form SKU contradicts selected identity", "steps": [
+      {"parent": "co-p1"}, {"parent": "co-detail"},
+      {"parent": "co-detail", "replace": [{"from": "data-product-sku=\"51515_WIX\"", "to": "data-product-sku=\"SYNTHETIC-OTHER_WIX\""}]}
+    ]},
+    "graphql-errors-data": {"nature": "derived", "purpose": "HTTP 200 and candidate data cannot hide GraphQL errors", "steps": [
+      {"parent": "co-p1", "set": [{"path": ["errors"], "value": [{"message": "SYNTHETIC upstream failure"}]}]}
+    ]},
+    "graphql-recovered": {"nature": "derived", "purpose": "Experimental retry sequence only, not approval of nonzero production retries", "steps": [
+      {"parent": "co-p1", "set": [{"path": ["errors"], "value": [{"message": "SYNTHETIC transient"}]}]},
+      {"parent": "co-p1"}, {"parent": "co-p2"}, {"parent": "co-p3"}
+    ]},
+    "http-forbidden": {"nature": "derived", "purpose": "Primary HTTP 403 is not absence and cannot trigger fallback", "steps": [{"parent": "co-p1", "status": 403}]},
+    "http-rate-limit": {"nature": "derived", "purpose": "Primary HTTP 429 is not an exhaustive negative", "steps": [{"parent": "co-p1", "status": 429}]},
+    "http-server-error": {"nature": "derived", "purpose": "Primary HTTP 500 is not an exhaustive negative", "steps": [{"parent": "co-p1", "status": 500}]},
+    "invalid-json": {"nature": "derived", "purpose": "Truncated JSON keeps its lineage but cannot prove identity", "steps": [{"parent": "co-p1", "replace": [{"from": "{", "to": "", "count": 1}]}]},
+    "unknown-schema": {"nature": "derived", "purpose": "A similar field name is not a supported catalog schema", "steps": [{"parent": "co-p1", "remove": [["data", "catalogSearch"]], "set": [{"path": ["data", "futureCatalog"], "value": {"items": []}}]}]},
+    "page-omitted": {"nature": "derived", "purpose": "An exact candidate does not excuse missing page two", "steps": [{"parent": "co-p1"}, {"parent": "co-p3"}]},
+    "page-repeated": {"nature": "derived", "purpose": "Repeated page one must not close a three-page search", "steps": [{"parent": "co-p1"}, {"parent": "co-p1"}]},
+    "totals-drift": {"nature": "derived", "purpose": "Totals change after an exact candidate was seen", "steps": [{"parent": "co-p1"}, {"parent": "co-p2", "set": [{"path": ["data", "catalogSearch", "totalCount"], "value": 4}]}]},
+    "page-type": {"nature": "derived", "purpose": "A numeric string is not an integer page index", "steps": [{"parent": "co-p1", "set": [{"path": ["data", "catalogSearch", "pageInfo", "currentPage"], "value": "1"}]}]},
+    "asset-loop": {"nature": "derived", "purpose": "The same metadata offset is returned twice while more is declared", "steps": [{"parent": "ap-assets"}, {"parent": "ap-assets"}]},
+    "asset-pending": {"nature": "derived", "purpose": "Captured metadata does not close the required collection when hasMore is true", "steps": [{"parent": "ap-assets"}]},
+    "missing-null-empty-types": {"nature": "derived", "purpose": "Ordered duplicate technical keys preserve missing, null, empty and JSON value types", "steps": [{"parent": "co-p1", "set": [{"path": ["data", "catalogSearch", "items", 0, "product", "attributes"], "value": [
+      {"key": "synthetic_extra"}, {"key": "synthetic_extra", "value": null}, {"key": "synthetic_extra", "value": ""},
+      {"key": "synthetic_extra", "value": true, "adminValue": true}, {"key": "synthetic_extra", "value": "true", "adminValue": "true"},
+      {"key": "synthetic_extra", "value": 132.003}, {"key": "synthetic_extra", "value": {"literal": "001"}}, {"key": "synthetic_extra", "value": ["", null, "001"]}
+    ]}]}]},
+    "documents-co-populated": {"nature": "derived", "purpose": "Invented populated downloads marker is unsupported, not authentic positive document support", "steps": [{"parent": "co-detail", "replace": [{"from": "id=\"downloads\"", "to": "id=\"downloads\" data-synthetic-populated=\"true\"><a href=\"/SYNTHETIC-document.pdf\">SYNTHETIC document</a><div"}]}]},
+    "documents-ap-populated": {"nature": "derived", "purpose": "Invented AP populated downloads cannot be certified from empty captures", "steps": [{"parent": "ap-detail", "replace": [{"from": "id=\"downloads\"", "to": "id=\"downloads\" data-synthetic-populated=\"true\"><a href=\"/SYNTHETIC-document.pdf\">SYNTHETIC document</a><div"}]}]},
+    "unknown-main": {"nature": "synthetic", "purpose": "Empty selectors in an unknown template are not proof of absence", "steps": [{"profile": "es-co", "surface": "html", "body": "<!doctype html><html><body><main>SYNTHETIC unknown template</main></body></html>"}]},
+    "applications-distinct-queries": {"nature": "synthetic", "purpose": "Same path, repeated parameters and different identity must survive logical application extraction", "steps": [{"profile": "es-co", "surface": "html", "body": "<section id=\"applications\"><a data-g-binding-application-link=\"/SYNTHETIC-application\" data-g-binding-params=\"id=A&amp;id=B&amp;engine=\">SYNTHETIC model</a><a data-g-binding-application-link=\"/SYNTHETIC-application\" data-g-binding-params=\"id=A&amp;id=C&amp;engine=\">SYNTHETIC model</a></section>"}]},
+    "external-entities": {"nature": "synthetic", "purpose": "Inert adversarial XML/HTML bytes; never resolve file or network entities", "steps": [{"profile": "es-co", "surface": "html", "body": "<!DOCTYPE html [<!ENTITY local SYSTEM 'file:///SYNTHETIC-not-a-real-file'><!ENTITY remote SYSTEM 'https://example.invalid/SYNTHETIC-entity'>]><html><body>&local;&remote;<script>throw 'SYNTHETIC do not execute';</script></body></html>"}]},
+    "dangerous-urls": {"nature": "synthetic", "purpose": "Destination policy inputs only; none is navigated or certified by this corpus", "steps": [{"profile": "en-ap", "surface": "asset_metadata", "body": "{\"references\":[\"http://127.0.0.1/\",\"https://[::1]/\",\"https://[::ffff:127.0.0.1]/\",\"https://169.254.169.254/\",\"https://www.wixfilters.com.evil.invalid/\",\"https://user@www.wixfilters.com/\",\"file:///SYNTHETIC\",\"javascript:SYNTHETIC\",\"https://www.wixfilters.com:444/\",\"https://www.wixfilters.com/\\r\\nX-SYNTHETIC:yes\"]}"}]},
+    "unresolved-resource": {"nature": "synthetic", "purpose": "Original template, noninteger position and boolean role remain raw; do not fabricate URL or download", "steps": [{"profile": "en-ap", "surface": "asset_metadata", "body": "{\"total\":1,\"offset\":0,\"limit\":1,\"hasMore\":false,\"hits\":[{\"link\":\"[SYNTHETIC_ASSET]\",\"position\":\"first\",\"metaData\":{\"mainImage\":true}}]}"}]},
+    "finite-volume": {"nature": "synthetic", "purpose": "Small finite seed to cross explicit test-only limits during future supervised processing; no production limit or RSS claim", "steps": [{"profile": "es-co", "surface": "html", "body": "<main><div>SYNTHETIC-1</div><div>SYNTHETIC-2</div><div>SYNTHETIC-3</div><div>SYNTHETIC-4</div><div>SYNTHETIC-5</div><div>SYNTHETIC-6</div><div>SYNTHETIC-7</div><div>SYNTHETIC-8</div><div>SYNTHETIC-9</div></main>"}]}
+  }
+}

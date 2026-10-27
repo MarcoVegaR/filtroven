@@ -45,6 +45,7 @@ nav:
   - Primeros pasos: getting-started.md
   - Arquitectura:
       - Índice: architecture/index.md
+      - Adaptador WIX: architecture/wix-adapter.md
       - Autorización: authorization.md
   - Desarrollo:
       - Índice: development/index.md

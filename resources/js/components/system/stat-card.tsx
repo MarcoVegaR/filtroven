@@ -22,7 +22,7 @@ const accentStyles = {
 
 const iconAccentStyles = {
     default: 'text-muted-foreground',
-    primary: 'text-primary',
+    primary: 'text-primary dark:text-accent-foreground',
     success: 'text-emerald-600 dark:text-emerald-400',
     warning: 'text-amber-600 dark:text-amber-400',
 };

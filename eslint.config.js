@@ -109,6 +109,7 @@ export default [
             'vendor',
             'node_modules',
             'public',
+            'site/',
             'bootstrap/ssr',
             'tailwind.config.js',
             'vite.config.ts',
@@ -125,7 +126,11 @@ export default [
         },
         rules: {
             curly: ['error', 'all'],
-            '@stylistic/brace-style': ['error', '1tbs', { allowSingleLine: false }],
+            '@stylistic/brace-style': [
+                'error',
+                '1tbs',
+                { allowSingleLine: false },
+            ],
         },
     },
 ];

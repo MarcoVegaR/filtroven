@@ -8,7 +8,7 @@ const dashboardContent = {
     eyebrow: 'Filtroven',
     title: 'Bienvenido al panel de Filtroven',
     description:
-        'Esta base ya está preparada para construir módulos internos con autenticación endurecida, experiencia en español y una identidad visual violeta consistente.',
+        'Esta base ya está preparada para construir módulos internos con autenticación endurecida, experiencia en español y la identidad Graphite de Filtroven.',
     summaryCards: [
         {
             title: 'Acceso seguro',
@@ -50,8 +50,8 @@ export default function Dashboard() {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Panel" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-                <section className="rounded-2xl border border-sidebar-border/70 bg-card p-6 shadow-sm dark:border-sidebar-border">
-                    <p className="text-sm font-medium text-primary">
+                <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+                    <p className="text-sm font-medium text-primary dark:text-accent-foreground">
                         {dashboardContent.eyebrow}
                     </p>
                     <h1 className="mt-2 text-2xl font-semibold tracking-tight">
@@ -66,7 +66,7 @@ export default function Dashboard() {
                     {dashboardContent.summaryCards.map((card) => (
                         <div
                             key={card.title}
-                            className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 bg-card p-5 dark:border-sidebar-border"
+                            className="relative aspect-video overflow-hidden rounded-xl border border-border bg-card p-5"
                         >
                             <PlaceholderPattern className="absolute inset-0 size-full stroke-primary/10" />
                             <div className="relative flex h-full flex-col justify-between">
@@ -78,14 +78,14 @@ export default function Dashboard() {
                                         {card.description}
                                     </p>
                                 </div>
-                                <span className="text-xs font-medium tracking-[0.2em] text-primary/80 uppercase">
+                                <span className="text-xs font-medium tracking-[0.2em] text-primary uppercase dark:text-accent-foreground">
                                     Filtroven
                                 </span>
                             </div>
                         </div>
                     ))}
                 </div>
-                <div className="relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 bg-card p-6 md:min-h-min dark:border-sidebar-border">
+                <div className="relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border border-border bg-card p-6 md:min-h-min">
                     <PlaceholderPattern className="absolute inset-0 size-full stroke-primary/10" />
                     <div className="relative grid gap-4 lg:grid-cols-[1.4fr_1fr]">
                         <div>
@@ -97,7 +97,7 @@ export default function Dashboard() {
                             </p>
                         </div>
                         <div className="rounded-xl border border-primary/15 bg-primary/5 p-4">
-                            <p className="text-sm font-medium text-primary">
+                            <p className="text-sm font-medium text-primary dark:text-accent-foreground">
                                 {dashboardContent.checklistTitle}
                             </p>
                             <ul className="mt-3 space-y-2 text-sm text-muted-foreground">

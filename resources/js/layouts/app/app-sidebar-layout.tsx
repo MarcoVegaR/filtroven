@@ -18,7 +18,7 @@ export default function AppSidebarLayout({
                 <AppSidebarHeader breadcrumbs={breadcrumbs} />
                 {children}
                 <footer className="mt-auto border-t border-border/40 bg-background/90 px-4 py-3 sm:px-6">
-                    <p className="text-center text-xs text-muted-foreground/60">
+                    <p className="text-center text-xs text-muted-foreground">
                         © {new Date().getFullYear()} {ui.branding.company}.
                         Todos los derechos reservados.
                     </p>

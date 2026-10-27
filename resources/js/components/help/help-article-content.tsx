@@ -55,7 +55,7 @@ export function HelpArticleContent({
                                     href={href}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="font-medium text-primary underline-offset-4 hover:underline"
+                                    className="font-medium text-primary underline-offset-4 hover:underline dark:text-accent-foreground"
                                     {...props}
                                 >
                                     {children}
@@ -66,7 +66,7 @@ export function HelpArticleContent({
                         return (
                             <Link
                                 href={href}
-                                className="font-medium text-primary underline-offset-4 hover:underline"
+                                className="font-medium text-primary underline-offset-4 hover:underline dark:text-accent-foreground"
                             >
                                 {children}
                             </Link>

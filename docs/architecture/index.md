@@ -35,4 +35,6 @@ Este índice agrupa decisiones y guías que explican cómo está organizado el s
 
 ## Regla de mantenimiento
 
+Para el adaptador propio de Filtroven, consulta [Adaptador WIX: arquitectura y operación](wix-adapter.md): API, flujo, contrato, límites, pruebas y compatibilidad condicional con Laravel Cloud.
+
 Cuando una convención arquitectónica cambie, actualiza o crea un ADR antes de ampliar guías derivadas.

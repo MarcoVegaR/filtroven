@@ -1,0 +1,207 @@
+{
+  "es-co-51515-search-p1-s1": {
+    "total_count": 3,
+    "page_info": {
+      "pageSize": 1,
+      "currentPage": 1,
+      "totalPages": 3,
+      "__typename": "SearchResultPageInfo"
+    },
+    "skus": [
+      "51515_WIX"
+    ]
+  },
+  "es-co-51515-search-p2-s1": {
+    "total_count": 3,
+    "page_info": {
+      "pageSize": 1,
+      "currentPage": 2,
+      "totalPages": 3,
+      "__typename": "SearchResultPageInfo"
+    },
+    "skus": [
+      "51515MP_WIX"
+    ]
+  },
+  "es-co-51515-search-p3-s1": {
+    "total_count": 3,
+    "page_info": {
+      "pageSize": 1,
+      "currentPage": 3,
+      "totalPages": 3,
+      "__typename": "SearchResultPageInfo"
+    },
+    "skus": [
+      "51515XP_WIX"
+    ]
+  },
+  "es-co-51515-detail": {
+    "main_preserved": true,
+    "application_occurrences": 0,
+    "logical_application_candidates": 0,
+    "gallery_items": 2,
+    "documents": "published_empty_observed",
+    "not_certified": true
+  },
+  "es-co-51515R-search-p1-s15": {
+    "total_count": 0,
+    "page_info": {
+      "pageSize": 15,
+      "currentPage": 1,
+      "totalPages": 0,
+      "__typename": "SearchResultPageInfo"
+    },
+    "skus": []
+  },
+  "en-ap-51515R-search-p1-s15": {
+    "total_count": 1,
+    "page_info": {
+      "pageSize": 15,
+      "currentPage": 1,
+      "totalPages": 1,
+      "__typename": "SearchResultPageInfo"
+    },
+    "skus": [
+      "51515R_WIX"
+    ]
+  },
+  "en-ap-51515R-detail": {
+    "main_preserved": true,
+    "application_occurrences": 0,
+    "logical_application_candidates": 0,
+    "gallery_items": 8,
+    "documents": "published_empty_observed",
+    "not_certified": true
+  },
+  "en-ap-51515R_WIX-assets-l25-o0": {
+    "total": 4,
+    "offset": 0,
+    "limit": 25,
+    "has_more": false,
+    "links": [
+      "/content/dam/wix-filters/pim-assets/product-image/51515R-bottom.jpg",
+      "/content/dam/wix-filters/pim-assets/product-image/51515R.jpg",
+      "/content/dam/wix-filters/pim-assets/product-image/51515R.tif",
+      "/content/dam/wix-filters/wix-product-assets/wix/others/51515R.tif"
+    ],
+    "mime_types": [
+      "image/jpeg",
+      "image/jpeg",
+      "image/tiff",
+      "image/tiff"
+    ],
+    "main_images": [
+      "true",
+      "true",
+      "true",
+      "true"
+    ]
+  },
+  "es-co-42831-search-p1-s15": {
+    "total_count": 1,
+    "page_info": {
+      "pageSize": 15,
+      "currentPage": 1,
+      "totalPages": 1,
+      "__typename": "SearchResultPageInfo"
+    },
+    "skus": [
+      "42831_WIX"
+    ]
+  },
+  "es-co-42831-detail": {
+    "main_preserved": true,
+    "application_occurrences": 22,
+    "logical_application_candidates": 11,
+    "gallery_items": 2,
+    "documents": "published_empty_observed",
+    "not_certified": true
+  },
+  "es-co-51515_WIX-assets-l25-o0": {
+    "total": 2,
+    "offset": 0,
+    "limit": 25,
+    "has_more": false,
+    "links": [
+      "/content/dam/wix-filters/pim-assets/product-image/51515.tif",
+      "/content/dam/wix-filters/wix-product-assets/wix/others/51515.tif"
+    ],
+    "mime_types": [
+      "image/tiff",
+      "image/tiff"
+    ],
+    "main_images": [
+      "true",
+      "true"
+    ]
+  },
+  "en-ap-NOEXISTE51515ZZ-search-p1-s15": {
+    "total_count": 0,
+    "page_info": {
+      "pageSize": 15,
+      "currentPage": 1,
+      "totalPages": 0,
+      "__typename": "SearchResultPageInfo"
+    },
+    "skus": []
+  },
+  "en-ap-51515-search-p1-s15": {
+    "total_count": 4,
+    "page_info": {
+      "pageSize": 15,
+      "currentPage": 1,
+      "totalPages": 1,
+      "__typename": "SearchResultPageInfo"
+    },
+    "skus": [
+      "51515_WIX",
+      "51515MP_WIX",
+      "51515R_WIX",
+      "51515XP_WIX"
+    ]
+  },
+  "en-ap-51515-detail": {
+    "main_preserved": true,
+    "application_occurrences": 188,
+    "logical_application_candidates": 94,
+    "gallery_items": 2,
+    "documents": "published_empty_observed",
+    "not_certified": true
+  },
+  "en-ap-51515R_WIX-assets-l2-o0": {
+    "total": 4,
+    "offset": 0,
+    "limit": 2,
+    "has_more": true,
+    "links": [
+      "/content/dam/wix-filters/pim-assets/product-image/51515R-bottom.jpg",
+      "/content/dam/wix-filters/pim-assets/product-image/51515R.jpg"
+    ],
+    "mime_types": [
+      "image/jpeg",
+      "image/jpeg"
+    ],
+    "main_images": [
+      "true",
+      "true"
+    ]
+  },
+  "en-ap-51515R_WIX-assets-l2-o2": {
+    "total": 4,
+    "offset": 2,
+    "limit": 2,
+    "has_more": false,
+    "links": [
+      "/content/dam/wix-filters/pim-assets/product-image/51515R.tif",
+      "/content/dam/wix-filters/wix-product-assets/wix/others/51515R.tif"
+    ],
+    "mime_types": [
+      "image/tiff",
+      "image/tiff"
+    ],
+    "main_images": [
+      "true",
+      "true"
+    ]
+  }
+}

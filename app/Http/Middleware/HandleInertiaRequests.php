@@ -124,7 +124,7 @@ class HandleInertiaRequests extends Middleware
                     ],
                 ],
                 'appearance' => [
-                    'palette' => 'violet',
+                    'palette' => 'filtroven-graphite',
                     'defaultMode' => 'light',
                     'supportedModes' => ['light', 'dark', 'system'],
                     'labels' => [

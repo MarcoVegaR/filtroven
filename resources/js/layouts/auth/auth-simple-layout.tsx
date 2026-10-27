@@ -1,5 +1,4 @@
 import { Link } from '@inertiajs/react';
-import AppLogoIcon from '@/components/app-logo-icon';
 import { home } from '@/routes';
 import type { AuthLayoutProps } from '@/types';
 
@@ -15,12 +14,16 @@ export default function AuthSimpleLayout({
                     <div className="flex flex-col items-center gap-4">
                         <Link
                             href={home()}
-                            className="flex flex-col items-center gap-2 font-medium"
+                            className="flex flex-col items-center gap-2 rounded-md font-medium outline-none focus-visible:ring-3 focus-visible:ring-ring"
+                            aria-label="Filtroven — inicio"
                         >
-                            <div className="mb-1 flex h-9 w-9 items-center justify-center rounded-md">
-                                <AppLogoIcon className="size-9 fill-current text-[var(--foreground)] dark:text-white" />
-                            </div>
-                            <span className="sr-only">{title}</span>
+                            <img
+                                src="/branding/filtroven-logo-flat-288.png"
+                                alt="Filtroven"
+                                width={288}
+                                height={260}
+                                className="h-auto w-32"
+                            />
                         </Link>
 
                         <div className="space-y-2 text-center">

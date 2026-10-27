@@ -108,7 +108,7 @@ test('appearance page remains available', function () {
         ->assertInertia(fn (Assert $page) => $page
             ->component('settings/appearance')
             ->where('ui.locale', 'es')
-            ->where('ui.appearance.palette', 'violet')
+            ->where('ui.appearance.palette', 'filtroven-graphite')
             ->where('ui.appearance.defaultMode', 'light')
             ->where('ui.appearance.supportedModes', ['light', 'dark', 'system'])
             ->missing('appearanceContent'),

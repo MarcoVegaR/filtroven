@@ -130,7 +130,7 @@ function SearchResultsCard({ card }: { card: CopilotSearchResultsCard }) {
                                     <div className="pt-3">
                                         <Link
                                             href={user.show_href}
-                                            className="text-xs font-medium text-primary hover:underline"
+                                            className="text-xs font-medium text-primary hover:underline dark:text-accent-foreground"
                                         >
                                             Abrir perfil
                                         </Link>
@@ -404,7 +404,7 @@ function PartialNoticeCard({ card }: { card: CopilotPartialNoticeCard }) {
                                 No ejecutado: {segment.reason}
                             </p>
                             {segment.suggested_follow_up && (
-                                <p className="pt-1 text-xs text-primary/80">
+                                <p className="pt-1 text-xs text-primary dark:text-accent-foreground">
                                     Sugerencia: {segment.suggested_follow_up}
                                 </p>
                             )}
@@ -675,7 +675,7 @@ export function CopilotMessageList({
                                                     <Link
                                                         key={`${item.id}-${reference.label}`}
                                                         href={reference.href}
-                                                        className="text-xs font-medium text-primary hover:underline"
+                                                        className="text-xs font-medium text-primary hover:underline dark:text-accent-foreground"
                                                     >
                                                         {reference.label}
                                                     </Link>

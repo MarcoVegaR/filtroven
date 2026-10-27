@@ -176,7 +176,7 @@ export function CopilotEmptyState({
 
             {prompts.length > 0 && (
                 <div className="w-full max-w-md space-y-3">
-                    <p className="text-center text-xs font-medium tracking-wider text-muted-foreground/70 uppercase">
+                    <p className="text-center text-xs font-medium tracking-wider text-muted-foreground uppercase">
                         Prueba preguntar
                     </p>
                     <div className="grid grid-cols-2 gap-2">
@@ -190,7 +190,7 @@ export function CopilotEmptyState({
                             />
                         ))}
                     </div>
-                    <p className="pt-1 text-center text-xs text-muted-foreground/60">
+                    <p className="pt-1 text-center text-xs text-muted-foreground">
                         O escribe tu propia pregunta abajo
                     </p>
                 </div>

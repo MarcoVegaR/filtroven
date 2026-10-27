@@ -27,6 +27,7 @@ test('dashboard uses filtroven branding and shared layout metadata', function ()
             ->where('name', 'Filtroven')
             ->where('ui.branding.application', 'Filtroven')
             ->where('ui.branding.company', 'Filtroven')
+            ->where('ui.appearance.palette', 'filtroven-graphite')
             ->where('ui.navigation.label', 'Navegación')
             ->where('ui.navigation.items.0.title', 'Panel')
             ->where('ui.navigation.items', fn ($items) => collect($items)->doesntContain(

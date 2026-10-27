@@ -60,7 +60,7 @@ export default function ErrorPage({ status, message }: ErrorPageProps) {
                 <main className="w-full max-w-lg rounded-3xl border border-border bg-card p-8 shadow-sm">
                     <div className="flex flex-col gap-6">
                         <div>
-                            <p className="text-sm font-medium text-primary">
+                            <p className="text-sm font-medium text-primary dark:text-accent-foreground">
                                 Filtroven
                             </p>
                             <p className="mt-3 text-7xl font-bold tracking-tight text-primary/20 dark:text-primary/10">

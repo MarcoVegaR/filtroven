@@ -53,7 +53,7 @@ export function HelpCategoryCard({ category }: HelpCategoryCardProps) {
                     >
                         <div className="flex items-start justify-between gap-3">
                             <div className="space-y-1.5">
-                                <p className="font-medium text-foreground transition-colors group-hover:text-primary">
+                                <p className="font-medium text-foreground transition-colors group-hover:text-primary dark:group-hover:text-accent-foreground">
                                     {article.title}
                                 </p>
                                 <p className="text-sm leading-6 text-muted-foreground">

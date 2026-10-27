@@ -1,7 +1,6 @@
 export const loginContent = {
     title: 'Inicia sesión',
-    description: 'Accede a Filtroven con tu correo electrónico y tu contraseña',
-    primaryActionLabel: 'Ingresar',
+    primaryActionLabel: 'Iniciar sesión',
     forgotPasswordLabel: '¿Olvidaste tu contraseña?',
     rememberLabel: 'Mantener mi sesión',
 } as const;

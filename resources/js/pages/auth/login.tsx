@@ -1,4 +1,5 @@
 import { Form, Head } from '@inertiajs/react';
+import { ArrowRight, LockKeyhole, Mail } from 'lucide-react';
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import TextLink from '@/components/text-link';
@@ -19,10 +20,7 @@ type Props = {
 
 export default function Login({ status, canResetPassword }: Props) {
     return (
-        <AuthLayout
-            title={loginContent.title}
-            description={loginContent.description}
-        >
+        <AuthLayout variant="branded" title={loginContent.title}>
             <Head title="Iniciar sesión" />
 
             <Form
@@ -32,68 +30,106 @@ export default function Login({ status, canResetPassword }: Props) {
             >
                 {({ processing, errors }) => (
                     <>
-                        <div className="grid gap-6">
+                        <div className="grid gap-5">
                             <div className="grid gap-2">
                                 <Label htmlFor="email">
                                     Correo electrónico
                                 </Label>
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    name="email"
-                                    required
-                                    autoFocus
-                                    tabIndex={1}
-                                    autoComplete="email"
-                                    placeholder="nombre@empresa.com"
+                                <div className="relative">
+                                    <Mail
+                                        aria-hidden="true"
+                                        className="pointer-events-none absolute top-1/2 left-4 z-10 size-5 -translate-y-1/2 text-muted-foreground"
+                                    />
+                                    <Input
+                                        id="email"
+                                        type="email"
+                                        name="email"
+                                        required
+                                        autoFocus
+                                        className="auth-field min-h-12 pl-12 text-base md:text-base"
+                                        aria-invalid={!!errors.email}
+                                        aria-describedby={
+                                            errors.email
+                                                ? 'email-error'
+                                                : undefined
+                                        }
+                                        autoComplete="email"
+                                        placeholder="nombre@empresa.com"
+                                    />
+                                </div>
+                                <InputError
+                                    id="email-error"
+                                    role="alert"
+                                    message={errors.email}
                                 />
-                                <InputError message={errors.email} />
                             </div>
 
                             <div className="grid gap-2">
-                                <div className="flex items-center">
-                                    <Label htmlFor="password">Contraseña</Label>
-                                    {canResetPassword && (
-                                        <TextLink
-                                            href={request()}
-                                            className="ml-auto text-sm"
-                                            tabIndex={5}
-                                        >
-                                            {loginContent.forgotPasswordLabel}
-                                        </TextLink>
-                                    )}
+                                <Label htmlFor="password">Contraseña</Label>
+                                <div className="relative">
+                                    <LockKeyhole
+                                        aria-hidden="true"
+                                        className="pointer-events-none absolute top-1/2 left-4 z-10 size-5 -translate-y-1/2 text-muted-foreground"
+                                    />
+                                    <PasswordInput
+                                        id="password"
+                                        name="password"
+                                        required
+                                        className="auth-field min-h-12 pr-12 pl-12 text-base md:text-base"
+                                        accessibleToggle
+                                        showPasswordLabel="Mostrar contraseña"
+                                        hidePasswordLabel="Ocultar contraseña"
+                                        aria-invalid={!!errors.password}
+                                        aria-describedby={
+                                            errors.password
+                                                ? 'password-error'
+                                                : undefined
+                                        }
+                                        autoComplete="current-password"
+                                        placeholder="Ingresa tu contraseña"
+                                    />
                                 </div>
-                                <PasswordInput
-                                    id="password"
-                                    name="password"
-                                    required
-                                    tabIndex={2}
-                                    autoComplete="current-password"
-                                    placeholder="Ingresa tu contraseña"
+                                <InputError
+                                    id="password-error"
+                                    role="alert"
+                                    message={errors.password}
                                 />
-                                <InputError message={errors.password} />
                             </div>
 
-                            <div className="flex items-center space-x-3">
-                                <Checkbox
-                                    id="remember"
-                                    name="remember"
-                                    tabIndex={3}
-                                />
-                                <Label htmlFor="remember">
-                                    {loginContent.rememberLabel}
-                                </Label>
+                            <div className="flex flex-col items-start gap-2 min-[375px]:flex-row min-[375px]:flex-wrap min-[375px]:items-center min-[375px]:justify-between min-[375px]:gap-x-3">
+                                <div className="flex min-h-11 items-center gap-2">
+                                    <Checkbox id="remember" name="remember" />
+                                    <Label
+                                        htmlFor="remember"
+                                        className="flex min-h-11 cursor-pointer items-center text-sm"
+                                    >
+                                        {loginContent.rememberLabel}
+                                    </Label>
+                                </div>
+                                {canResetPassword && (
+                                    <TextLink
+                                        href={request()}
+                                        className="inline-flex min-h-11 items-center text-sm"
+                                    >
+                                        {loginContent.forgotPasswordLabel}
+                                    </TextLink>
+                                )}
                             </div>
 
                             <Button
                                 type="submit"
-                                className="mt-4 w-full"
-                                tabIndex={4}
+                                className="min-h-13 w-full gap-3 text-base"
                                 disabled={processing}
                                 data-test="login-button"
                             >
                                 {processing && <Spinner />}
                                 {loginContent.primaryActionLabel}
+                                {!processing && (
+                                    <ArrowRight
+                                        aria-hidden="true"
+                                        className="size-4"
+                                    />
+                                )}
                             </Button>
                         </div>
                     </>
@@ -101,7 +137,10 @@ export default function Login({ status, canResetPassword }: Props) {
             </Form>
 
             {status && (
-                <div className="mb-4 text-center text-sm font-medium text-green-600">
+                <div
+                    role="status"
+                    className="mt-5 text-center text-sm font-medium text-foreground"
+                >
                     {status}
                 </div>
             )}

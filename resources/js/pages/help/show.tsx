@@ -151,7 +151,7 @@ export default function HelpShow({
                                         <p
                                             className={
                                                 isActive
-                                                    ? 'font-semibold text-primary'
+                                                    ? 'font-semibold text-primary dark:text-accent-foreground'
                                                     : 'font-medium text-foreground'
                                             }
                                         >

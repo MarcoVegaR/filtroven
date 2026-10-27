@@ -8,10 +8,15 @@ use Laravel\Fortify\Features;
 test('login screen can be rendered', function () {
     $this->get(route('login'))
         ->assertOk()
+        ->assertSee('background-color: #FAF9F7;', false)
+        ->assertSee('background-color: #141414;', false)
+        ->assertSee('href="/favicon.svg"', false)
+        ->assertSee('href="/apple-touch-icon.png"', false)
         ->assertInertia(fn (Assert $page) => $page
             ->component('auth/login')
             ->where('ui.locale', 'es')
             ->where('ui.branding.application', 'Filtroven')
+            ->where('ui.appearance.palette', 'filtroven-graphite')
             ->missing('authSurface')
             ->where('canResetPassword', true),
         );

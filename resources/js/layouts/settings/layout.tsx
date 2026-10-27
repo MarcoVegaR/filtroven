@@ -40,7 +40,7 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
                                 className={cn(
                                     'w-full justify-start transition-colors',
                                     isCurrentOrParentUrl(item.href)
-                                        ? 'bg-primary/10 font-medium text-primary hover:bg-primary/15'
+                                        ? 'bg-accent font-medium text-accent-foreground hover:bg-accent'
                                         : 'text-muted-foreground hover:text-foreground',
                                 )}
                             >
