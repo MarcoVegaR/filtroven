@@ -1,6 +1,9 @@
 <?php
 
+use App\Support\Wix\OperationalFailure;
+use App\Support\Wix\Runtime\CgroupEnvelope;
 use Tests\Support\Wix\Prototype\RuntimeCapabilities;
+use Tests\Support\Wix\Prototype\SupervisedPhpTask;
 
 /** @return array<string, mixed> Synthetic availability, never operational accreditation. */
 function wixRuntimeProfile(int $version = 80500, string $sapi = 'cli'): array
@@ -175,6 +178,25 @@ it('collects the actual build without DNS child processes or network work', func
         ->and($runtime['constants']['LIBXML_NO_XXE'])->toBe(defined('LIBXML_NO_XXE'))
         ->and($runtime['ini']['memory_limit'])->toBe(ini_get('memory_limit'))
         ->and((new RuntimeCapabilities)->assess($runtime)['enabled'])->toBeFalse();
+});
+
+it('reports the same actual envelope in production and prototype without granting native eligibility to a probe', function () {
+    $runtime = new App\Support\Wix\Runtime\RuntimeCapabilities;
+    $observed = $runtime->collect();
+    $prototype = (new SupervisedPhpTask)->preflight();
+    expect($observed['memory_max'])->toBe($observed['cgroup']['memory']['limit'])
+        ->and($observed['pids_max'])->toBe($observed['cgroup']['pids']['limit'])
+        ->and($prototype['os_memory_max_bytes'])->toBe($observed['memory_max'])
+        ->and($prototype['os_pids_max'])->toBe($observed['pids_max']);
+    if (! CgroupEnvelope::qualified($observed['cgroup'])) {
+        expect($runtime->assess($observed)['native_eligible'])->toBeFalse()
+            ->and($runtime->assess($observed)['problems'])->toContain('os_envelope')
+            ->and((new App\Support\Wix\Runtime\SupervisedPhpTask)->supported())->toBeFalse()
+            ->and($prototype['problems'])->toContain('finite_os_envelope')
+            ->and(fn () => $runtime->assertAvailable($observed))->toThrow(OperationalFailure::class);
+    } else {
+        expect($prototype['problems'])->not->toContain('finite_os_envelope');
+    }
 });
 
 it('smokes native IO disabled-function detection and termination of only its own PHP child', function () {

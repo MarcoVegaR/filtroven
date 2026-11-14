@@ -11,6 +11,8 @@ use App\Support\Wix\ResultFactory;
 use Tests\Support\Wix\Prototype\ContractWitness;
 use Tests\Support\Wix\Prototype\ParentResultProbe;
 
+pest()->group('wix-portable');
+
 it('derives all three AND groups over every combination of the eight sections', function (int $mask) {
     $sections = [];
     foreach (CoverageSections::NAMES as $bit => $name) {

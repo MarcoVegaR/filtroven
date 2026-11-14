@@ -144,5 +144,47 @@ jobs:
       - name: Run migrations
         run: php artisan migrate --force --no-interaction
 
-      - name: Run tests
-        run: php artisan test --compact
+      - name: Run all non-Wix backend tests
+        run: php artisan test --compact --ci --exclude-testsuite=Wix
+
+      - name: Run portable Wix contracts on host
+        run: php artisan test --compact --ci --testsuite=Wix --group=wix-portable
+
+  wix-native:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ['8.4', '8.5']
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup PHP for locked dependency installation
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          tools: composer:v2
+          coverage: none
+
+      - name: Cache Composer packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache/files
+          key: ${{ runner.os }}-composer-${{ matrix.php-version }}-${{ hashFiles('composer.lock') }}
+
+      - name: Install locked PHP dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Build qualified runtime and run ALL Wix tests
+        run: bash .github/wix-native/run.sh ${{ matrix.php-version }} --build
+
+      - name: Upload native runtime and test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wix-native-${{ matrix.php-version }}
+          path: test-results/wix-native-${{ matrix.php-version }}/
+          if-no-files-found: warn
+          retention-days: 7

@@ -27,5 +27,6 @@ yarn-error.log
 /.vscode
 /.zed
 /coverage
+/test-results/wix-native-*/
 /site
 /storage/logs/*.log

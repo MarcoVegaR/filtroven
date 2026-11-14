@@ -2,6 +2,7 @@
 
 namespace Tests\Support\Wix\Prototype;
 
+use App\Support\Wix\Runtime\CgroupEnvelope;
 use Closure;
 use RuntimeException;
 
@@ -40,16 +41,15 @@ final class SupervisedPhpTask
                 $problems[] = $name;
             }
         }
-        $memory = self::boundedFile('/sys/fs/cgroup/memory.max');
-        $pids = self::boundedFile('/sys/fs/cgroup/pids.max');
-        $memoryMax = ctype_digit(trim($memory)) ? (int) trim($memory) : 0;
-        $pidMax = ctype_digit(trim($pids)) ? (int) trim($pids) : 0;
+        $envelope = (new CgroupEnvelope)->collect();
+        $memoryMax = $envelope['memory']['limit'];
+        $pidMax = $envelope['pids']['limit'];
         if (PHP_OS_FAMILY !== 'Linux' || PHP_SAPI !== 'cli' || PHP_VERSION_ID < 80400 || PHP_VERSION_ID >= 80600
             || ! defined('POSIX_RLIMIT_AS') || ! is_executable($this->binary)
             || realpath($this->binary) !== realpath(PHP_BINARY) || ! is_file(__DIR__.'/synthetic-child.php')) {
             $problems[] = 'runtime';
         }
-        if ($memoryMax < 67108864 || $memoryMax > 536870912 || $pidMax < 2 || $pidMax > 64) {
+        if (! CgroupEnvelope::qualified($envelope)) {
             $problems[] = 'finite_os_envelope';
         }
         if (self::rss(getmypid()) === null) {

@@ -72,12 +72,17 @@ npm run build
 npm run types:check
 npm run lint:check
 npm run format:check
-php artisan test --compact
+php artisan test --compact --ci --exclude-testsuite=Wix
+php artisan test --compact --ci --testsuite=Wix --group=wix-portable
+bash .github/wix-native/run.sh 8.4 --build
+bash .github/wix-native/run.sh 8.5 --build
 ```
 
 `npm run build` y `types:check` generan rutas Wayfinder mediante Artisan: requieren `vendor/` y una aplicación PHP que pueda arrancar. Los archivos generados y `public/build` están excluidos de Git.
 
 Por defecto `phpunit.xml` usa SQLite **en memoria**, caché/sesiones en array, correo en array y colas síncronas. Evita variables de shell que sobrescriban esa configuración cuando ejecutes pruebas locales. Los tests pueden crear fixtures/seeders dentro de la base de prueba aislada; no son una carga inicial de datos locales. CI verifica además PostgreSQL en una base efímera `filtroven_test` para PHP 8.4 y 8.5.
+
+Las dos primeras órdenes PHP son la verificación rápida del host; **no sustituyen la integración WIX**. Las dos órdenes Docker ejecutan toda la suite `Wix`, sin skips, con el mismo runner obligatorio de CI. Requieren Docker Linux/cgroup v2, Bash y `vendor/` instalado desde el lockfile; `--build` prepara la imagen oficial fijada por digest, sin instalar nada en el host. En ejecuciones posteriores se puede omitir `--build` para usar la imagen local sin descargas. No se monta `.env`, `.git` ni el socket Docker. Diagnóstico y JUnit quedan en `test-results/wix-native-8.4/` y `test-results/wix-native-8.5/`. Consulta los [límites y la receta del entorno WIX](docs/architecture/wix-adapter.md#pruebas-y-evidencia-reproducible). `php artisan test --compact` sigue incluyendo todas las suites, pero necesita un entorno nativo calificado; un host genérico no lo es.
 
 ## Documentación y automatización
 

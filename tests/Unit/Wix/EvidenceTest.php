@@ -8,6 +8,8 @@ use App\Support\Wix\EvidenceBuilder;
 use App\Support\Wix\OperationalFailure;
 use Tests\Support\Wix\Prototype\ParentResultProbe;
 
+pest()->group('wix-portable');
+
 function wixEvidenceResponse(?string $final = null): CapturedResponse
 {
     return new CapturedResponse(new RequestPlan('123', 'es-co', EvidenceSurface::Html, 'https://www.wixfilters.com/es-co/catalog/results/product.html/51515.html', []), 200, [], 'inert', $final, '2026-10-24T12:00:00.123Z');

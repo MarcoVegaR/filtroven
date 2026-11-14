@@ -5,7 +5,7 @@
     - Tipo: `referencia`
     - Audiencia: desarrollo backend, QA y responsables de ejecución/despliegue
     - Fuente verificable: `app/Services/Wix/`, `app/Support/Wix/`, `config/wix.php`, `app/Providers/AppServiceProvider.php`, `tests/Unit/Wix/`, `tests/Support/Wix/` y `tests/fixtures/wix/`
-    - Revisión técnica: 2026-10-27; contrato `1.0`, parser `capture-2026-10-25.1`
+    - Revisión técnica: 2026-11-14; contrato `1.0`, parser `capture-2026-10-25.1`
 
 ## Estado y alcance
 
@@ -268,12 +268,28 @@ No confundir estos límites con un SLA/hard realtime. El caller debe dejar marge
 - **Padre y ejecución Linux CLI**, PHP `>=8.4,<8.6`. `Preflight`, `Admission` y `SupervisedPhpTask` verifican el padre; no basta poder lanzar un hijo CLI desde una petición web. El hijo usa **`PHP_BINARY` del padre**, sin parámetro alternativo configurable.
 - libcurl **exactamente `7.88.1` o `8.17.0`**, SSL, `CURLOPT_PREREQFUNCTION` y decodificación controlable. Otra versión moderna no está admitida automáticamente.
 - Extensiones/primitivas curl, DOM/XPath/libxml, JSON, zlib, sockets y POSIX; `hrtime`, familia `proc_open/status/terminate/close`, select/streams, `flock`, `posix_setrlimit`, sockets UDP y funciones listadas en `RuntimeCapabilities.php`. `composer check-platform-reqs` no acredita por sí solo estos requisitos.
-- Lectura de **rutas exactas cgroup v2** `/sys/fs/cgroup/memory.max` y `pids.max`: memoria finita entre **64 y 512 MiB** inclusive; pids entre **2 y 64** inclusive. Ausente, `max`, cgroup v1 o distinta ruta no se autodetecta: falla cerrado. Son gates actuales del producto, no meros flags del laboratorio.
+- **Perfil `native-isolated-v1`:** memoria cgroup v2 finita entre **64 y 512 MiB** inclusive; pids entre **2 y 64** inclusive. `CgroupEnvelope` resuelve la pertenencia real mediante `/proc/self/cgroup` y el mount cgroup2 de `/proc/self/mountinfo`, incluyendo subárboles montados y límites heredados: usa el mínimo finito visible entre el grupo propio y sus ancestros. No presupone que los archivos estén en la raíz de `/sys/fs/cgroup`. No crea grupos, cambia límites ni migra procesos. Cgroup v1, rutas ambiguas/no normalizadas, metadata excesiva y lecturas no verificables fallan cerrado.
+- Las observaciones distinguen `finite`, `unbounded`, `unavailable` y `unsupported`; las tres últimas tienen `limit=null`, **no un presupuesto ficticio de cero bytes**. Un `max` local puede estar acotado por un ancestro finito, pero **todos los ancestros visibles, incluida la raíz del mount, deben ser verificables**. `mount root=/` también puede ser una raíz virtual de namespace: no demuestra raíz global ni permite ignorar una lectura `null` (ausente, denegada o excesiva). Aunque una raíz global genuina puede carecer de interfaces de control, este colector no acredita esa identidad: devuelve conservadoramente `unavailable`, no un límite finito ni `unbounded` inventado. Se verifica nuevamente la pertenencia tras leer. Estos valores son límites del dominio compartido, no memoria libre ni headroom reservado para WIX. No contemplan ancestros ocultos fuera del mount visible; no se infiere un límite favorable allí.
 - `/proc/<pid>/status` con `VmHWM` disponible para supervisión. Suma muestreada de high-water marks padre+hijo >192 MiB corta. **No es un cap exacto de RSS**; un padre de larga vida puede acumular HWM anterior.
 - Worker con `memory_limit=64M` y límite duro `RLIMIT_AS=256 MiB` mediante POSIX, sin ejecutable `prlimit`. Espacio virtual AS no es RAM residente; extensiones/imagen/baseline afectan headroom. El límite del cgroup no garantiza ausencia universal de OOM.
 - `proc_open` usa argv, no shell, entrypoint estático del repositorio y sockets no bloqueantes con buffers observados ≤8192 bytes. Entorno hijo reducido (`PATH`, `PHP_INI_SCAN_DIR`), no copia `.env` completa ni `PHPRC`; comprobar extensiones/INI efectivos del hijo, no sólo `php -m` del shell.
 - Distribuir juntos `Runtime/document-worker.php`, protocolo/lexemas y clases HTTP requeridas por rutas relativas. No recibe código, rutas ejecutables ni autoload del usuario. Las operaciones de parseo no ejecutan curl; scripting/ejecución y funciones de escape se deshabilitan en el hijo.
 - Supervisor reserva cierre y ejecuta TERM → gracia acotada → KILL si necesario → `proc_close`/reap y cierre de descriptores. Esto no acredita el comportamiento ante OOM del pod o muerte externa del padre: medirlo en despliegue.
+
+### Capacidades, perfil operativo y laboratorio no son lo mismo
+
+`RuntimeCapabilities::assess($snapshot)` es un evaluador puro: devuelve `probe_eligible`, `native_eligible`, `profile` y `problems`. `probe_eligible=true` **no autoriza lanzar un hijo ni enviar tráfico**. Sólo expresa disponibilidad declarada de primitivas para investigar un runtime. `assertAvailable`, el supervisor y admisión mantienen el rechazo nativo si falta el perfil operativo. El prototipo/laboratorio comparte el mismo descubridor de cgroups; ya no aplica otra interpretación de las rutas.
+
+| Nivel | Qué permite / exige |
+| --- | --- |
+| `wix-portable` (grupo de pruebas) | Contrato/DTO, cobertura, evidencia y evaluación sintética de perfiles/cgroups. No requiere cgroups, procesos auxiliares, DNS ni TLS nativo. No es otro modo de ejecutar `fetch` sin seguridad. |
+| `probe_eligible` | Primitivas declaradas Linux CLI PHP 8.4/8.5 disponibles. Puede ser verdadero con memoria ilimitada o libcurl no calificado; **no equivale a `native_eligible`**. |
+| `native-isolated-v1` | Además, build libcurl conocido y envelope finito en los rangos anteriores. Conserva límites de hijo, IPC, recepción, parsing, admisión y deadline. Elegibilidad no acredita integración, topología ni producción. |
+| Laboratorio calificado | Añade CPU/red/filesystem/usuario y condiciones de medición reproducibles descritas abajo. Que un perfil sea elegible no demuestra esas condiciones. |
+
+**Resultado host observado el 2026-10-27:** Linux CLI PHP 8.5.0/libcurl 8.17.0, primitivas disponibles. Las lecturas parciales del grupo anidado habían mostrado memoria `max` y pids `16852`, pero faltan las interfaces en la raíz del mount: **no acreditan los límites efectivos de toda la cadena**. Tras corregir la excepción de raíz detectada por revisión independiente, ambos recursos se informan como `unavailable/limit=null`; `probe_eligible=true`, `native_eligible=false`, problema `os_envelope`. Supervisor y laboratorio siguen rechazando trabajo nativo. No se exige modificar todo el host a 512 MiB: hace falta un dominio aislado adecuado para el workload, o diseñar y acreditar un mecanismo equivalente.
+
+**Límite del cambio de portabilidad:** no se han eliminado los upper bounds del perfil ni la lista de builds libcurl. Son la frontera del aislamiento/auditoría existente, no requisitos universales de PHP ni una garantía que Laravel Cloud publique. `memory_limit` no limita todas las asignaciones nativas; `RLIMIT_AS` se establece en el hijo **después de arrancar PHP**, no cubre el padre ni todo el dominio. HWM es muestreado. Por tanto, reemplazarlos sólo con esas variables reduciría la garantía actual. Admitir un host sin envelope equivalente requiere un diseño de enforcement previo al arranque y de consumo agregado, pruebas adversariales y revisión independiente; no está resuelto cambiando un número. Admitir padre web requiere además un binario CLI aprobado y calificado, no usar ciegamente `PHP_BINARY`. No se agregó ese soporte ni colas, Redis, servicios o dependencias.
 
 ### Admisión y red segura
 
@@ -311,7 +327,13 @@ Ante procesos largos/config cache, la closure relee el repositorio de configurac
 
 ## Pruebas y evidencia reproducible
 
-Desde un runtime que cumpla los gates anteriores, comandos nativos del repositorio:
+Para desarrollo de contrato y políticas en un host PHP 8.4/8.5 con las dependencias del proyecto, sin acreditar un sandbox nativo:
+
+```bash
+php artisan test --compact --do-not-cache-result --fail-on-warning --fail-on-notice --fail-on-deprecation --fail-on-skipped --group=wix-portable
+```
+
+Es un subconjunto explícito (contrato, cobertura, evidencia y casos sintéticos de cgroups/perfiles), **no sustituye la suite completa ni certifica el adaptador**. No hay auto-skip por entorno. Desde un runtime que cumpla los gates nativos anteriores:
 
 ```bash
 composer check-platform-reqs
@@ -325,7 +347,26 @@ Para modificar PHP, ejecutar Pint sólo sobre los archivos propios cambiados; pa
 
 **Reproducibilidad del laboratorio:** la evidencia histórica utilizó una imagen local existente `filtroven-prd15-php84-21:20261021` (CLI oficial 8.4.26 con extensiones requeridas) y binario/INI Herd 8.5.0 montados readonly. Ejecución secuencial por runtime, CPU 1, cgroup 512 MiB/pids 64, usuario sin privilegios, filesystem readonly, capabilities eliminadas, no-new-privileges, red `none`, vendor/fuentes readonly y scratch/cache en tmpfs. El servidor propio del laboratorio usa loopback dentro del contenedor. Estas medidas del harness no son instrucciones de despliegue Cloud ni todas son gates del producto.
 
-**No hay Dockerfile ni runner portable versionado que reconstruya esa imagen.** Los runners y manifiestos de aquella ejecución viven en `/tmp/opencode/prd15-live-diagnosis/`; son artefactos locales de auditoría, no un requisito que otro miembro deba encontrar en su máquina. Para repetir en otro equipo se necesita preparar/acreditar un entorno equivalente con PHP 8.4/8.5 y las extensiones/primitivas de esta guía; no se promete que instalar PHP o ejecutar la suite en cualquier host funcione. No instalar/pullar una imagen supuesta ni ampliar gates para ocultar esta limitación. Los tests/corpus sí están en el repositorio.
+**Entorno compartido versionado:** `.github/wix-native/Dockerfile`, `images.env` y `run.sh` sustituyen la dependencia de aquella imagen local y del binario Herd. Usan PHP oficial CLI Bookworm **8.4.27 y 8.5.12**, bases `linux/amd64` fijadas por digest; compilan únicamente sockets dentro de Docker, sin cambiar Composer/npm ni paquetes del host. La construcción verifica libcurl 7.88.1; no amplía la lista permitida. El contexto de build es sólo el Dockerfile por stdin: fuentes, vendor, credenciales y `.env` no se incorporan a la imagen. Al actualizar una base por seguridad, revisar el digest y repetir ambas calificaciones; el pin no recibe actualizaciones automáticas.
+
+Desde la raíz, con `vendor/` instalado desde `composer.lock`:
+
+```bash
+# Preparación explícita y suite WIX íntegra (idéntico comando en CI):
+bash .github/wix-native/run.sh 8.4 --build
+bash .github/wix-native/run.sh 8.5 --build
+# Reutilizar la imagen preparada, sin pull automático:
+bash .github/wix-native/run.sh 8.5
+bash .github/wix-native/run.sh --help
+```
+
+Requisitos del runner: Docker Linux con cgroup v2, Bash, Git, tar y herramientas GNU habituales. Un daemon remoto no sirve para los bind mounts locales. No se modifica el cgroup del host ni se agregan privilegios. Ejecuta UID 1000, CPU 1, memoria/swap 512 MiB, pids 64, filesystem/fuentes/vendor readonly, capabilities eliminadas, no-new-privileges y red `none`; sólo scratch/caches tmpfs y un directorio privado de resultados son escribibles. El snapshot filtra raíces necesarias de la aplicación y pruebas, excluye caches previas, `.env`, `.git` y dependencias; vendor se monta por separado readonly. Los workers siguen siendo archivos estáticos de sólo lectura. El laboratorio DNS/TLS usa loopback del mismo contenedor, sin acceso a WIX público. No monta el daemon Docker ni necesita un Dev Container de editor. No es una imagen de producción ni un entorno frontend; macOS/Windows/Docker Desktop y Cloud no quedan acreditados por esta receta.
+
+Antes de los tests imprime PHP/binario/SAPI, extensiones, libcurl, cgroups observados y elegibilidad real; verifica requisitos de extensiones del lockfile y versión de la matriz. Un entorno no admitido **falla**, no omite la suite. Cada ejecución tiene timeout de 300 s (TERM, luego KILL) y fail-on para warnings/notices/deprecations/skips/incomplete/risky. Los resultados y manifiestos de fuentes/imagen quedan en `test-results/wix-native-<versión>/`, excluidos de Git; CI los publica como artefactos durante siete días incluso si falla el paso. No contienen variables de entorno ni secretos de aplicación.
+
+**Partición de CI sin pérdida de cobertura:** `phpunit.xml` separa `Wix` de `Unit`; la ejecución predeterminada todavía incluye ambas y `Feature`. En cada PHP 8.4/8.5, `tests` ejecuta **todas las otras suites** con `--exclude-testsuite=Wix` y además el grupo `wix-portable` de `Wix`. El job independiente `wix-native` ejecuta **toda `Wix`**, incluyendo de nuevo portable; no hay `continue-on-error`, auto-skip ni filtros de casos nativos. La unión conserva todos los archivos y escenarios backend; la prueba `WixNativeEnvironmentTest` verifica el catálogo de archivos sin huecos ni duplicados entre suites. Los dos jobs nativos son obligatorios para el resultado del workflow; configurar checks requeridos de protección de ramas sigue siendo una acción administrativa externa no realizada aquí. La verificación histórica de las 39 tareas no sustituye la revisión de este cambio.
+
+Calificación local de esta receta, **2026-11-14**: PHP oficial 8.4.27 y 8.5.12, ambos CLI/libcurl 7.88.1, cgroup v2 efectivo 512 MiB/64 pids y elegibilidad nativa positiva. Cada versión ejecutó **1165 tests/7847 assertions**, cero errores/fallos/skips, con exit 0 y manifiesto de fuentes íntegro. Catálogo Pest por identificador: **1771 = 606 no-WIX + 1165 WIX**, sin faltantes, extras ni intersección; los 404 portables son subconjunto de WIX y se duplican deliberadamente en el host. Esto acredita la ejecución local de la receta, **no un nuevo run remoto de GitHub ni Cloud**. Los artefactos de cada ejecución permiten comprobar la versión y fuente realmente usadas; no atribuir resultados antiguos a una base actualizada.
 
 Incidentes que explican regresiones importantes: CNAME recursivo válido empaquetado fue rechazado por owner incorrectamente estricto; un registro JSON/HTML grande legítimo excedía el frame IPC y ahora se fragmenta sin subir el cap; TTL antes se descontaba desde inicio DNS, no recepción. `ProductionBoundaryTest`, `ProductionBudgetTest` y `ContinuityTest` cubren estos límites; `MediaTest`/`ContinuityTest` preservan el recurso completo anterior a una interrupción a mitad de página. No tratar cuerpo saneado pequeño como prueba de todo tamaño real.
 
@@ -345,7 +386,7 @@ Investigación documental oficial del **2026-10-27**, contrastada con el código
 | Padre web con `PHP_SAPI != cli` | **Incompatible con política actual del adaptador** | Gates padre y `PHP_BINARY`; no atribuir una prohibición al proveedor. SAPI web default no acreditado por las fuentes consultadas. |
 | libcurl 7.88.1/8.17.0 | No documentado para la imagen Cloud real | Medir; otra versión falla aunque sea reciente. |
 | proc_open, IPC/select/buffers, POSIX RLIMIT_AS, procfs | No acreditado | Extensiones no prueban permisos efectivos; requiere probe. |
-| cgroup v2 paths y memoria 64–512 MiB/pids 2–64 | No acreditado; condición crítica actual | Un tamaño anunciado de 512 MB no demuestra contenido/rutas/pids. Una instancia mayor puede quedar fuera del gate. |
+| cgroup v2 resuelto y memoria 64–512 MiB/pids 2–64 | No acreditado; condición crítica actual | Se detectan rutas anidadas y límites visibles heredados, no sólo raíz. Un tamaño anunciado de 512 MB no demuestra contenido/pids/headroom. Una instancia mayor puede quedar fuera del perfil. |
 | Memoria PHP, AS y headroom/HWM | Condicional | [Memoria PHP][cloud-memory] no es cgroup ni AS; [502/OOM][cloud-oom] advierte sobre falta de memoria. |
 | DNS UDP al resolver explícito, HTTPS directo/pin/CA sin proxy | Condicional, no medido | [Network][cloud-network] documenta red/IPs de salida, no garantiza esta semántica precisa. Resolver interno puede servir si cumple. WAF/cache ingress no prueban política egress. |
 | Un dominio CLI con una réplica | Plausible, no calificado | [Autoscaling][cloud-compute] permite `None`; [Workers][cloud-workers] admite proceso custom. No existe un nuevo caller/worker WIX implementado aquí. |

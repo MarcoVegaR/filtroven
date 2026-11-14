@@ -10,6 +10,7 @@ use Tests\Support\Wix\Prototype\PinTokenProbe;
 use Tests\Support\Wix\Prototype\SupervisedPhpTask;
 
 require __DIR__.'/ChildTaskProtocol.php';
+require __DIR__.'/../../../../app/Support/Wix/Runtime/CgroupEnvelope.php';
 require __DIR__.'/SupervisedPhpTask.php';
 
 /** Passive unrelated-process witness; never an operation admitted by SupervisedPhpTask. */

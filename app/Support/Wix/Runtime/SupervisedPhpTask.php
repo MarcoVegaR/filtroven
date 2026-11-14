@@ -33,19 +33,8 @@ final class SupervisedPhpTask
                 return false;
             }
         }
-        set_error_handler(static fn (int $severity): bool => $severity === E_WARNING, E_WARNING);
-        try {
-            $memory = file_get_contents('/sys/fs/cgroup/memory.max', false, null, 0, 32);
-            $pids = file_get_contents('/sys/fs/cgroup/pids.max', false, null, 0, 32);
-        } finally {
-            restore_error_handler();
-        }
-        $memory = is_string($memory) ? trim($memory) : '';
-        $pids = is_string($pids) ? trim($pids) : '';
 
-        return PHP_OS_FAMILY === 'Linux' && PHP_SAPI === 'cli' && PHP_VERSION_ID >= 80400 && PHP_VERSION_ID < 80600
-            && defined('POSIX_RLIMIT_AS') && ctype_digit($memory) && (int) $memory >= 67108864 && (int) $memory <= 536870912
-            && ctype_digit($pids) && (int) $pids >= 2 && (int) $pids <= 64;
+        return CgroupEnvelope::qualified((new CgroupEnvelope)->collect());
     }
 
     /**

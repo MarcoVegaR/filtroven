@@ -4,6 +4,8 @@ use App\Support\Wix\Data\WixLookupResult;
 use Tests\Support\Wix\Prototype\ContractWitness;
 use Tests\Support\Wix\Prototype\ParentResultProbe;
 
+pest()->group('wix-portable');
+
 it('round trips the independent complete contract witness through typed production data', function (string $scenario) {
     $original = ParentResultProbe::snapshot($scenario);
     $result = WixLookupResult::fromArray($original);
